@@ -181,6 +181,8 @@ void loop() {
 
   // Route JSON
   if (req.indexOf("GET /data") >= 0) {
+
+    // valeurs brutes du DHT11
     float h = dht.readHumidity();
     float t = dht.readTemperature();
 
