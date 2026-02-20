@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 const app = express();
 app.use(express.json());
 
-const uri = "mongodb+srv://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@labvert-cloud.fyg0v3g.mongodb.net/?appName=LabVert-cloud"; 
+const uri = "mongodb+srv://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@labvert-cloud.fyg0v3g.mongodb.net/LabVert?retryWrites=true&w=majority&appName=LabVert-cloud";
 const client = new MongoClient(uri);
 
 app.post("/data", async (req, res) => {
