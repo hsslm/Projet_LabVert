@@ -3,139 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <title>LabVert – Système d’arrosage intelligent</title>
+
+    <!-- Icônes Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+
     <style>
         :root {
             --vert-fonce: #1b5e20;
             --vert: #43a047;
             --vert-clair: #e8f5e9;
             --accent: #8bc34a;
-            --texte: #222;
+            --fond: #f7fdf8;
+            --texte: #1f1f1f;
             --gris: #666;
-            --fond: #f5f5f5;
-            --radius: 10px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --radius: 14px;
+            --shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top left, #e8f5e9 0, #f5f5f5 45%, #ffffff 100%);
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: var(--fond);
             color: var(--texte);
-            line-height: 1.6;
         }
 
+        /* HEADER */
         header {
             background: linear-gradient(135deg, var(--vert-fonce), var(--vert));
             color: white;
-            padding: 2.5rem 10vw 3.5rem;
+            padding: 3rem 10vw 4rem;
             border-radius: 0 0 40px 40px;
             box-shadow: var(--shadow);
             position: relative;
-            overflow: hidden;
         }
 
-        header::after {
-            content: "";
-            position: absolute;
-            right: -80px;
-            top: -80px;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.08);
+        header h1 {
+            font-size: 3rem;
+            margin: 0.5rem 0;
+        }
+
+        header p {
+            max-width: 600px;
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
         .badge {
             display: inline-block;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
+            padding: 0.4rem 1rem;
             border-radius: 999px;
-            padding: 0.25rem 0.9rem;
-            font-size: 0.8rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
-        h1 {
-            font-size: 2.6rem;
-            margin-top: 0.8rem;
-            margin-bottom: 0.4rem;
-            letter-spacing: 0.03em;
-        }
-
-        .subtitle {
-            font-size: 1.05rem;
-            max-width: 600px;
-            color: #e0f2f1;
-        }
-
-        .meta {
-            margin-top: 1.5rem;
-            font-size: 0.95rem;
-            color: #c8e6c9;
-        }
-
-        .meta span {
-            display: inline-block;
-            margin-right: 1.5rem;
-        }
-
+        /* SECTIONS */
         main {
-            padding: 2.5rem 10vw 3rem;
+            padding: 3rem 10vw;
         }
 
         section {
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
-            display: inline-flex;
+            font-size: 1.9rem;
+            margin-bottom: 1rem;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        h2::before {
-            content: "";
-            width: 6px;
-            height: 22px;
-            border-radius: 999px;
-            background: linear-gradient(180deg, var(--vert), var(--accent));
-        }
-
-        h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.4rem;
+            gap: 0.6rem;
             color: var(--vert-fonce);
         }
 
-        p {
-            margin-bottom: 0.4rem;
-            color: var(--texte);
+        h2 .icon {
+            font-family: "Material Symbols Rounded";
+            font-size: 1.9rem;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
         }
 
         .grid-2 {
             display: grid;
-            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-            align-items: flex-start;
-        }
-
-        .card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.2rem 1.4rem;
-            box-shadow: var(--shadow);
-        }
-
-        .card.soft {
-            background: var(--vert-clair);
         }
 
         ul {
+            padding-left: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.8rem;
+        }
+
+        table td, table th {
+            padding: 0.6rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: var(--vert-clair);
+            color: var(--vert-fonce);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--vert-clair);
+            color: var(--vert-fonce);
+            margin-top: 3rem;
+            border-radius: 30px 30px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="badge">Projet d’intégration – SIM 420-SF4-RE</div>
+    <h1>LabVert</h1>
+    <p>Système d’arrosage intelligent permettant de surveiller en temps réel l’état d’une plante et de gérer son arrosage automatiquement.</p>
+    <p><strong>Équipe – Groupe 02 :</strong> Douaa Bouhlal, Abyan-Rahima Elmi, Selma Hajjami</p>
+</header>
+
+<main>
+
+    <section>
+        <h2><span class="icon">eco</span> Description du projet</h2>
+        <div class="card">
+            <p>LabVert est un système d’arrosage intelligent connecté qui analyse l’humidité du sol et la température ambiante afin d’arroser une plante de manière optimale.</p>
+            <p>Deux modes sont disponibles :</p>
+            <ul>
+                <li><strong>Mode manuel :</strong> l’utilisateur contrôle l’arrosage via une interface web.</li>
+                <li><strong>Mode automatique :</strong> une IA décide du moment optimal pour arroser.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">group</span> L’équipe</h2>
+        <div class="card">
+            <p>Projet réalisé par trois membres collaborant sur le matériel, le logiciel et l’interface.</p>
+            <table>
+                <tr><th>Membre</th><th>Tâches principales</th></tr>
+                <tr><td>Selma</td><td>Matériel, backend, interface</td></tr>
+                <tr><td>Douaa</td><td>Backend, IA, interface</td></tr>
+                <tr><td>Abyan</td><td>Interface utilisateur, matériel, backend</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">lightbulb</span> L’idée</h2>
+        <div class="card">
+            <p>Les plantes ont des besoins différents selon leur espèce, la température et l’humidité du sol. LabVert automatise ce processus grâce à des capteurs et une IA.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">psychology</span> Problème résolu</h2>
+        <div class="card">
+            <p>Un mauvais arrosage peut causer :</p>
+            <ul>
+                <li>Pourriture des racines</li>
+                <li>Stress hydrique</li>
+                <li>Maladies fongiques</li>
+            </ul>
+            <p>LabVert évite le gaspillage d’eau et protège la plante.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">star</span> Innovation</h2>
+        <div class="card">
+            <p>Contrairement aux applications classiques, LabVert <strong>arrose automatiquement</strong> selon les besoins réels de la plante.</p>
+            <p>Accessible aux personnes âgées, débutants et personnes en situation de handicap.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">devices</span> Technologies utilisées</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Matériel</h3>
+                <ul>
+                    <li>ESP32</li>
+                    <li>Capteur DHT11</li>
+                    <li>Capteur d’humidité FC-28</li>
+                    <li>Pompe submersible</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Logiciels & Langages</h3>
+                <ul>
+                    <li>C++</li>
+                    <li>Python</li>
+                    <li>HTML / CSS / JavaScript</li>
+                    <li>Visual Studio Code</li>
+                    <li>Git</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">troubleshoot</span> Défis et difficultés</h2>
+        <div class="card">
+            <ul>
+                <li>Mesure précise de l’humidité</li>
+                <li>Surveillance continue</li>
+                <li>Gestion du niveau d’eau</li>
+                <li>Adaptation selon le type de plante</li>
+                <li>Intégration matériel–logiciel</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2><span class="icon">check_circle</span> Conclusion</h2>
+        <div class="card">
+            <p>LabVert combine automatisation, intelligence artificielle et interface intuitive pour simplifier l’entretien des plantes et assurer leur santé.</p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    Projet LabVert – 2024 • Système d’arrosage intelligent
+</footer>
+
+</body>
+</html>{
            
