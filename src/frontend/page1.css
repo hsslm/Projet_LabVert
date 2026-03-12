@@ -1,0 +1,101 @@
+/* ── RESET : enlève les marges par défaut du navigateur ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── BODY  ── */
+body {
+  min-height: 100vh;              /* prend toute la hauteur de l'écran */
+  font-family: 'DM Sans', sans-serif;
+  background-image: url('bg.jpg'); /*  image de fond */
+  background-size: cover;          /* l'image couvre toute la page */
+  background-position: center;     /* centrée */
+  display: flex;
+  align-items: center;             /* centre verticalement */
+  justify-content: center;         /* centre horizontalement */
+}
+
+/* ── CARD : la carte blanche au centre ── */
+.card {
+  background: rgba(255,255,255,0.18); /* blanc semi-transparent */
+  backdrop-filter: blur(18px);        /* flou givré derrière */
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 32px;                /* coins arrondis */
+  padding: 56px 52px;                 /* espace intérieur */
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  animation: fadeUp 0.8s ease both;   /* animation au chargement */
+}
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block;
+  background: rgba(46,125,50,0.2);
+  color: #1b5e20;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+/* ── TITRE ── */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  color: #1b5e20;
+  margin-bottom: 12px;
+}
+
+/* ── SLOGAN ── */
+.slogan {
+  font-size: 1.05rem;
+  color: #2d4a2d;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+/* ── DESCRIPTION ── */
+.description {
+  font-size: 0.88rem;
+  color: #3a5a3a;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+/* ── BOUTON ── */
+.btn {
+  display: inline-block;
+  background: #2e7d32;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 16px 40px;
+  border-radius: 100px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+  box-shadow: 0 6px 24px rgba(46,125,50,0.35);
+}
+
+/* ── BOUTON  ── */
+.btn:hover {
+  background: #1b5e20;
+  transform: translateY(-2px); 
+}
+
+/* ── ANIMATION ia ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px); 
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);    
+  }
+}
