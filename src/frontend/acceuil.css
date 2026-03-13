@@ -1,27 +1,29 @@
 /* ── RESET : enlève les marges par défaut du navigateur ── */
 * {
-  margin: 0;
-  padding: 0;
+  margin: 0;/*enlève les espaces extérieurs-*/
+  padding: 0;/*enlève les espaces interieurs-*/
   box-sizing: border-box;
 }
 
 /* ── BODY  ── */
 body {
-  min-height: 100vh;              /* prend toute la hauteur de l'écran */
-  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;              /* hauteur page (prend toute la hauteur de l'écran) */
+  font-family: 'DM Sans', Serif; /*Style police*/
   background-image: url('bg.jpg'); /*  image de fond */
   background-size: cover;          /* l'image couvre toute la page */
   background-position: center;     /* centrée */
-  display: flex;
+  image-rendering: auto;
+  display: flex;                  /*mode flexbox pr aligner les éléments*/
   align-items: center;             /* centre verticalement */
   justify-content: center;         /* centre horizontalement */
 }
+/* ensemble met la carte au centre de la page*/
 
-/* ── CARD : la carte blanche au centre ── */
+/* ── CARD : la carte  au centre ── */
 .card {
-  background: rgba(255,255,255,0.18); /* blanc semi-transparent */
+  background: rgba(255,255,255,0.18); /* 255,255,255 = blanc 0.18 = 18% d'opacité */
   backdrop-filter: blur(18px);        /* flou givré derrière */
-  border: 1px solid rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.35); /* l’épaisseur de la bordure (1 pixel)+ solid=sytle bordure(ligne pleine)
   border-radius: 32px;                /* coins arrondis */
   padding: 56px 52px;                 /* espace intérieur */
   max-width: 480px;
@@ -88,7 +90,7 @@ h1 {
   transform: translateY(-2px); 
 }
 
-/* ── ANIMATION ia ── */
+/* ── animatio ── */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -98,4 +100,6 @@ h1 {
     opacity: 1;
     transform: translateY(0);    
   }
+  /* from = état de départ : invisible + décalé vers le bas/ to = état final : visible + place normale
+*/
 }
