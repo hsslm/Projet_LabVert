@@ -28,7 +28,7 @@ let monChart = new Chart(ctx, {
 });
 
 function chargerStats() {
-  fetch('/stats/')
+  fetch('http://172.20.10.3:3000/stats/')
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
@@ -56,7 +56,7 @@ function chargerStats() {
 
 // ── MISE À JOUR TEMPÉRATURE ET HUMIDITÉ EN TEMPS RÉEL ──
 function mettreAJour() {
-  fetch('/latest/')
+  fetch('http://172.20.10.3:3000/latest/')
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
