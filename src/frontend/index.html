@@ -1,128 +1,191 @@
+<!--<!DOCTYPE html> 
+
+<html lang="fr"> 
+
+<head> 
+
+  <meta charset="UTF-8"> 
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+  <title>Lab Vert</title> 
+
+ 
+
+  <link rel="stylesheet" href="/style.css"> 
+
+</head> 
+
+ 
+
+<body> 
+
+  <h1>Lab Vert</h1> 
+
+ 
+
+  <div class="card"> 
+
+    <div id="temp" class="value">-- °C</div> 
+
+    <div class="label">Température</div> 
+
+ 
+
+    <div id="hum" class="value">-- %</div> 
+
+    <div class="label">Humidité</div> 
+
+  </div> 
+
+  <a href="./plante.html">Plante</a> 
+
+  <div class="sidenav">
+  <a href="./plante.html">Moyenne</a>
+  <a href="#">Mediane</a>
+  <a href="#">Graphique</a>
+</div>
+
+<div class="content">
+  <h2>CSS Template</h2>
+  <p>A full-height, fixed sidenav and content.</p>
+</div>
+
+
+
+
+
+
+  <script src="/script.js"></script> 
+
+ 
+
+</body> 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"> <!-- pr les accents-->
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- adapte taille ecran-->
-  <title>LabVert — Dashboard</title>
- <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet"><!--police-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script><!--libraire chart-->
-  <link rel="stylesheet" href="index.css"><!--style fichier-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab Vert</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Carte température -->
-  <div class="sensor-card"><!-- boîte principale (la carte)-->
-    <div class="sensor-label"> Température
+  </html>-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab Vert</title>
 
-    </div><!-- boîte avc titre-->
-    <div class="sensor-value" id="tempVal">22<span class="sensor-unit">°C
+  <link rel="stylesheet" href="style.css">
+</head>
 
-    </span></div><!-- boîte donnes+unite-->
+<body>
+
+  <!-- MENU LATERAL -->
+  <div class="sidenav">
+    <button class="menu-btn" onclick="toggleSection('moyenneBox')">Moyenne</button>
+    <button class="menu-btn" onclick="toggleSection('medianeBox')">Médiane</button>
+    <button class="menu-btn" onclick="toggleSection('graphiqueBox')">Graphique</button>
   </div>
 
-  <!-- Carte humidité -->
-  <div class="sensor-card">
-    <div class="sensor-label"> Humidité du sol</div>
-    <div class="sensor-value" id="humVal">68<span class="sensor-unit">%</span></div>
-  </div>
+  <!-- CONTENU PRINCIPAL -->
+  <div class="content">
 
-  <!-- Carte arrosage -->
-  <div class="arrosage-card">
-    <div class="sensor-label"> Arrosage</div>
-    <!--Partie automatique-->
-    <div class="toggle-row">
-      <span class="toggle-label">Mode automatique</span> <!-- vraie checkbox (cachée par CSS)-->
-      <label class="toggle"><!--visuel qu'on voit (le beau toggle)-->
-        <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)"><!--appelle toggleMode() au clic-->
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-    <!--Partie manuel-->
-    <div class="toggle-row">
-      <span class="toggle-label">Mode manuel</span> <!--appelle toggleMode() au clic-->
-      <label class="toggle">
-        <input type="checkbox" id="togglePompe">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-  </div>
- 
- 
-<!-- Carte statistiques -->
-<div class="stats-card"> <!-- boite principal-->
-  <div class="sensor-label"> Statistiques</div><!--titre-->
- <div class="stat-row" id="statTemp" onclick="ouvrirModal('Température', '--', '--', '--', '--')"><!--appele qd je clique-->
-  <span class="stat-name">Température</span>
-  <span class="stat-arrow">›</span><!--fleche-->
-</div>
-<div class="stat-row" id="statHum" onclick="ouvrirModal('Humidité', '--', '--', '--', '--')">
-  <span class="stat-name">Humidité</span>
-  <span class="stat-arrow">›</span><!--fleche-->
-</div>
-</div>
+    <h1 class="page-title">Tableau de bord</h1>
 
-  <!-- Graphique -->
-  <div class="chart-card"> <!-- boîte avc le graphique-->
-    <canvas id="monGraphique"><!-- zone où Chart.js dessine le graphique-->
-      </canvas><!--balise HTML spéciale qui crée une zone de dessin.-->
-  </div>
-  <!-- POPUP STATISTIQUES -->
-<!-- Fond sombre derrière le popup -->
-<!-- onclick="fermerModal(event)" = ferme si on clique sur le fond -->
-<div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
+    <div class="cards">
 
-  <!-- La carte blanche du popup -->
-  <div class="modal">
-
-    <!-- Titre du popup, remplacé par le JS au clic -->
-    <h2 id="modalTitre">Statistiques</h2>
-
-    <!-- Grille 2x2 : 4 cases pour les stats -->
-    <div class="modal-stats">
-
-      <!-- Case Médiane -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Médiane</div>
-        <!-- id="modalMediane" : le JS met la vraie valeur ici -->
-        <div class="modal-stat-val" id="modalMediane">—</div>
+      <div class="card">
+        <div class="value" id="temp">-- °C</div>
+        <div class="label">Température</div>
       </div>
 
-      <!-- Case Moyenne -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Moyenne</div>
-        <div class="modal-stat-val" id="modalMoyenne">—</div>
+      <div class="card">
+        <div class="value" id="hum">-- %</div>
+        <div class="label">Humidité</div>
       </div>
 
-      <!-- Case Minimum -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Minimum</div>
-        <div class="modal-stat-val" id="modalMin">—</div>
-      </div>
-
-      <!-- Case Maximum -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Maximum</div>
-        <div class="modal-stat-val" id="modalMax">—</div>
-      </div>
+      <!-- GRAPHIQUE -->
+      <canvas id="myChart"></canvas>
 
     </div>
-    <!-- fin grille -->
 
-    <!-- Zone de dessin pour le graphique à barres -->
-    <canvas id="modalGraphique" height="100"></canvas>
-    <br><br>
+    <!-- BOUTON ARROSAGE -->
+    <button class="btn" onclick="toggleArrosageMenu()">Arroser votre plante</button>
 
-    <!-- Bouton pour fermer le popup -->
-    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">
-      Fermer
-    </button>
+    <!-- MINI SECTION ARROSAGE -->
+    <div id="arrosageMenu" class="arrosage-box hidden">
+      <h3>Arrosage automatique</h3>
+      <button id="autoOn" class="btn-small">ON</button>
+      <button id="autoOff" class="btn-small">OFF</button>
+    </div>
+
+    <!-- MINI SECTION MOYENNE -->
+    <div id="moyenneBox" class="mini-box hidden">
+      <h3>Moyenne</h3>
+      <button class="btn-small">Ta plante</button>
+      <button class="btn-small">Moyenne générale</button>
+    </div>
+
+    <!-- MINI SECTION MEDIANE -->
+    <div id="medianeBox" class="mini-box hidden">
+      <h3>Médiane</h3>
+      <button class="btn-small">Ta plante</button>
+      <button class="btn-small">Médiane générale</button>
+    </div>
+
+    <!-- MINI SECTION GRAPHIQUE -->
+    <div id="graphiqueBox" class="mini-box hidden">
+      <h3>Graphique</h3>
+      <button class="btn-small">Graphique plante</button>
+      <button class="btn-small">Graphique général</button>
+    </div>
 
   </div>
-  <!-- fin carte blanche -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-</div>
-<!-- fin fond sombre -->
+<script>
+const ctx = document.getElementById('myChart');
 
-  <script src="index.js"></script>
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
+    datasets: [
+      {
+        label: 'Température (°C)',
+        data: [20, 22, 19, 23, 21],
+        borderColor: '#1b5e20',
+        backgroundColor: 'rgba(27, 94, 32, 0.2)',
+        borderWidth: 2,
+        tension: 0.3
+      },
+      {
+        label: 'Humidité (%)',
+        data: [60, 55, 70, 65, 62],
+        borderColor: '#0288d1',
+        backgroundColor: 'rgba(2, 136, 209, 0.2)',
+        borderWidth: 2,
+        tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: false }
+    }
+  }
+});
+</script>
+
+<script src="script.js"></script>
 </body>
 </html>
+
+ 
