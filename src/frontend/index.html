@@ -1,108 +1,29 @@
-<!--<!DOCTYPE html> 
-
-<html lang="fr"> 
-
-<head> 
-
-  <meta charset="UTF-8"> 
-
-  <meta name="viewport" content="width=device-width, initial-scale=1"> 
-
-  <title>Lab Vert</title> 
-
- 
-
-  <link rel="stylesheet" href="/style.css"> 
-
-</head> 
-
- 
-
-<body> 
-
-  <h1>Lab Vert</h1> 
-
- 
-
-  <div class="card"> 
-
-    <div id="temp" class="value">-- °C</div> 
-
-    <div class="label">Température</div> 
-
- 
-
-    <div id="hum" class="value">-- %</div> 
-
-    <div class="label">Humidité</div> 
-
-  </div> 
-
-  <a href="./plante.html">Plante</a> 
-
-  <div class="sidenav">
-  <a href="./plante.html">Moyenne</a>
-  <a href="#">Mediane</a>
-  <a href="#">Graphique</a>
-</div>
-
-<div class="content">
-  <h2>CSS Template</h2>
-  <p>A full-height, fixed sidenav and content.</p>
-</div>
-
-
-
-
-
-
-  <script src="/script.js"></script> 
-
- 
-
-</body> 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<<<<<<< HEAD
-  <meta charset="UTF-8"> <!-- pour les accents -->
-  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- adapte taille écran -->
-  <title>LabVert — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet"><!--police-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script><!--librairie chart-->
-  <link rel="stylesheet" href="index.css"><!--style fichier-->
-=======
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lab Vert</title>
-
-  <link rel="stylesheet" href="style.css">
->>>>>>> 69f8f4e4cf74436187a1b21b290620c3f73541fe
+  <title>LabVert - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
 
-<<<<<<< HEAD
-  <!-- Titre de la plante -->
   <h2 id="plantTitle"></h2>
 
-  <!-- Carte température -->
   <div class="sensor-card">
     <div class="sensor-label">Température</div>
     <div class="sensor-value" id="tempVal">22<span class="sensor-unit">°C</span></div>
   </div>
 
-  <!-- Carte humidité -->
   <div class="sensor-card">
     <div class="sensor-label">Humidité du sol</div>
     <div class="sensor-value" id="humVal">68<span class="sensor-unit">%</span></div>
   </div>
 
-  <!-- Carte arrosage -->
   <div class="arrosage-card">
     <div class="sensor-label">Arrosage</div>
-
-    <!-- Partie automatique -->
     <div class="toggle-row">
       <span class="toggle-label">Mode automatique</span>
       <label class="toggle">
@@ -110,8 +31,6 @@
         <span class="toggle-slider"></span>
       </label>
     </div>
-
-    <!-- Partie manuel -->
     <div class="toggle-row">
       <span class="toggle-label">Mode manuel</span>
       <label class="toggle">
@@ -121,7 +40,6 @@
     </div>
   </div>
 
-  <!-- Carte statistiques -->
   <div class="stats-card">
     <div class="sensor-label">Statistiques</div>
     <div class="stat-row" id="statTemp" onclick="ouvrirModal('Température', '--', '--', '--', '--')">
@@ -134,159 +52,39 @@
     </div>
   </div>
 
-  <!-- Graphique -->
   <div class="chart-card">
     <canvas id="monGraphique"></canvas>
   </div>
 
-  <!-- POPUP STATISTIQUES -->
   <div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
     <div class="modal">
       <h2 id="modalTitre">Statistiques</h2>
-
       <div class="modal-stats">
         <div class="modal-stat">
           <div class="modal-stat-label">Médiane</div>
-          <div class="modal-stat-val" id="modalMediane">—</div>
+          <div class="modal-stat-val" id="modalMediane">-</div>
         </div>
         <div class="modal-stat">
           <div class="modal-stat-label">Moyenne</div>
-          <div class="modal-stat-val" id="modalMoyenne">—</div>
+          <div class="modal-stat-val" id="modalMoyenne">-</div>
         </div>
         <div class="modal-stat">
           <div class="modal-stat-label">Minimum</div>
-          <div class="modal-stat-val" id="modalMin">—</div>
+          <div class="modal-stat-val" id="modalMin">-</div>
         </div>
         <div class="modal-stat">
           <div class="modal-stat-label">Maximum</div>
-          <div class="modal-stat-val" id="modalMax">—</div>
+          <div class="modal-stat-val" id="modalMax">-</div>
         </div>
       </div>
-
       <canvas id="modalGraphique" height="100"></canvas>
       <br><br>
-=======
-  </html>-->
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lab Vert</title>
-
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-  <!-- MENU LATERAL -->
-  <div class="sidenav">
-    <button class="menu-btn" onclick="toggleSection('moyenneBox')">Moyenne</button>
-    <button class="menu-btn" onclick="toggleSection('medianeBox')">Médiane</button>
-    <button class="menu-btn" onclick="toggleSection('graphiqueBox')">Graphique</button>
-  </div>
-
-  <!-- CONTENU PRINCIPAL -->
-  <div class="content">
-
-    <h1 class="page-title">Tableau de bord</h1>
-
-    <div class="cards">
-
-      <div class="card">
-        <div class="value" id="temp">-- °C</div>
-        <div class="label">Température</div>
-      </div>
-
-      <div class="card">
-        <div class="value" id="hum">-- %</div>
-        <div class="label">Humidité</div>
-      </div>
-
-      <!-- GRAPHIQUE -->
-      <canvas id="myChart"></canvas>
->>>>>>> 69f8f4e4cf74436187a1b21b290620c3f73541fe
-
       <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">
         Fermer
       </button>
     </div>
-<<<<<<< HEAD
   </div>
-=======
 
-    <!-- BOUTON ARROSAGE -->
-    <button class="btn" onclick="toggleArrosageMenu()">Arroser votre plante</button>
-
-    <!-- MINI SECTION ARROSAGE -->
-    <div id="arrosageMenu" class="arrosage-box hidden">
-      <h3>Arrosage automatique</h3>
-      <button id="autoOn" class="btn-small">ON</button>
-      <button id="autoOff" class="btn-small">OFF</button>
-    </div>
-
-    <!-- MINI SECTION MOYENNE -->
-    <div id="moyenneBox" class="mini-box hidden">
-      <h3>Moyenne</h3>
-      <button class="btn-small">Ta plante</button>
-      <button class="btn-small">Moyenne générale</button>
-    </div>
-
-    <!-- MINI SECTION MEDIANE -->
-    <div id="medianeBox" class="mini-box hidden">
-      <h3>Médiane</h3>
-      <button class="btn-small">Ta plante</button>
-      <button class="btn-small">Médiane générale</button>
-    </div>
-
-    <!-- MINI SECTION GRAPHIQUE -->
-    <div id="graphiqueBox" class="mini-box hidden">
-      <h3>Graphique</h3>
-      <button class="btn-small">Graphique plante</button>
-      <button class="btn-small">Graphique général</button>
-    </div>
-
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-const ctx = document.getElementById('myChart');
->>>>>>> 69f8f4e4cf74436187a1b21b290620c3f73541fe
-
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
-    datasets: [
-      {
-        label: 'Température (°C)',
-        data: [20, 22, 19, 23, 21],
-        borderColor: '#1b5e20',
-        backgroundColor: 'rgba(27, 94, 32, 0.2)',
-        borderWidth: 2,
-        tension: 0.3
-      },
-      {
-        label: 'Humidité (%)',
-        data: [60, 55, 70, 65, 62],
-        borderColor: '#0288d1',
-        backgroundColor: 'rgba(2, 136, 209, 0.2)',
-        borderWidth: 2,
-        tension: 0.3
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: { beginAtZero: false }
-    }
-  }
-});
-</script>
-
-<script src="script.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>
-
- 
