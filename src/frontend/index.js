@@ -1,4 +1,10 @@
-// ── GRAPHIQUE : initialisé vide, rempli par le backend ──
+
+const nomPlante = localStorage.getItem("planteNom");
+document.getElementById("plantTitle").textContent = nomPlante;
+
+console.log("Plante sélectionnée :", nomPlante);
+
+// ── GRAPHIQUE PRINCIPAL ──
 const ctx = document.getElementById('monGraphique').getContext('2d');
 
 let monChart = new Chart(ctx, {
@@ -27,26 +33,43 @@ let monChart = new Chart(ctx, {
   options: { responsive: true }
 });
 
+// ── CHARGER LES STATISTIQUES ──
 function chargerStats() {
   fetch('http://172.20.10.3:3000/stats/')
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
+
       monChart.data.labels = data.labels;
-      monChart.data.datasets[0].data = data.temperature.historique;
-      monChart.data.datasets[1].data = data.humidite.historique;
+      monChart.data.datasets[0].data = data.temperature.historique.map(Number);
+      monChart.data.datasets[1].data = data.humidite.historique.map(Number);
       monChart.update();
+
       document.querySelector('#statTemp .stat-val').textContent = data.temperature.mediane + '°C';
       document.querySelector('#statHum .stat-val').textContent = data.humidite.mediane + '%';
+
       document.getElementById('statTemp').onclick = () =>
-        ouvrirModal('Température', data.temperature.mediane, data.temperature.minimum, data.temperature.maximum, data.temperature.moyenne);
+        ouvrirModal(
+          'Température',
+          data.temperature.mediane,
+          data.temperature.minimum,
+          data.temperature.maximum,
+          data.temperature.moyenne
+        );
+
       document.getElementById('statHum').onclick = () =>
-        ouvrirModal('Humidité', data.humidite.mediane, data.humidite.minimum, data.humidite.maximum, data.humidite.moyenne);
+        ouvrirModal(
+          'Humidité',
+          data.humidite.mediane,
+          data.humidite.minimum,
+          data.humidite.maximum,
+          data.humidite.moyenne
+        );
     })
     .catch(() => {
       document.querySelector('#statTemp .stat-val').textContent = '--°C';
       document.querySelector('#statHum .stat-val').textContent = '--%';
-      // Branche quand même les clics avec des tirets
+
       document.getElementById('statTemp').onclick = () =>
         ouvrirModal('Température', '--', '--', '--', '--');
       document.getElementById('statHum').onclick = () =>
@@ -60,12 +83,18 @@ function mettreAJour() {
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
-      document.getElementById('tempVal').innerHTML = data.temperature + '<span class="sensor-unit">°C</span>';
-      document.getElementById('humVal').innerHTML  = data.humidity + '<span class="sensor-unit">%</span>';
+
+      const temp = parseFloat(data.temperature);
+      const hum = parseFloat(data.humidity);
+
+      document.getElementById('tempVal').innerHTML = temp + '<span class="sensor-unit">°C</span>';
+      document.getElementById('humVal').innerHTML = hum + '<span class="sensor-unit">%</span>';
+
+      verifierConditions(temp, hum);
     })
     .catch(() => {
-      document.getElementById('tempVal').innerHTML = '--<span class="sensor-unit">°C</span>';
-      document.getElementById('humVal').innerHTML  = '--<span class="sensor-unit">%</span>';
+      document.getElementById('tempVal').innerHTML = '--°C';
+      document.getElementById('humVal').innerHTML = '--%';
     });
 }
 
@@ -89,11 +118,11 @@ function arroserMaintenant() {
   }, 3000);
 }
 
-// ── OUVRIR LE POPUP DE STATS ──
+// ── POPUP STATISTIQUES ──
 let modalChart = null;
 
 function ouvrirModal(nom, mediane, min, max, moyenne) {
-  document.getElementById('modalTitre').textContent =  nom;
+  document.getElementById('modalTitre').textContent = nom;
   document.getElementById('modalMediane').textContent = mediane;
   document.getElementById('modalMoyenne').textContent = moyenne;
   document.getElementById('modalMin').textContent = min;
@@ -117,17 +146,48 @@ function ouvrirModal(nom, mediane, min, max, moyenne) {
   });
 }
 
-// ── FERMER LE POPUP ──
 function fermerModal(e) {
   if (e.target === document.getElementById('modalOverlay')) {
     document.getElementById('modalOverlay').classList.remove('open');
   }
 }
 
-// ── LANCE TOUT AU CHARGEMENT ──
+// ── INFORMATIONS PLANTE ──
+const apiKey = "sk-ZnU069c6c20d90c8d15861";
+let besoinsPlante = null;
+
+function chargerInfosPlante() {
+  if (!nomPlante) return;
+
+  fetch(`https://perenual.com/api/v2/species-list?key=${apiKey}&q=${nomPlante}`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.data || data.data.length === 0) return;
+      besoinsPlante = data.data[0];
+      console.log("Besoins de la plante :", besoinsPlante);
+    })
+    .catch(err => console.error("Erreur API plante", err));
+}
+
+// ── VÉRIFIER CONDITIONS TEMP/HUM ──
+function verifierConditions(temp, hum) {
+  if (!besoinsPlante) return;
+
+  const besoinEau = besoinsPlante.watering;
+
+  if (hum < 40) {
+    console.log("Sol trop sec pour", nomPlante);
+    document.body.style.background = "#ffebee";
+  } else {
+    document.body.style.background = "#f1f8f1";
+  }
+}
+
+// ── LANCEMENT AU CHARGEMENT ──
 chargerStats();
 mettreAJour();
+chargerInfosPlante();
 
-// Répète toutes les 5 secondes
+// Répète toutes les 5 sec pour les valeurs et toutes les 30 sec pour les stats
 setInterval(mettreAJour, 5000);
 setInterval(chargerStats, 30000);

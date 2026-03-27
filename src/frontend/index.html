@@ -1,127 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"> <!-- pr les accents-->
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- adapte taille ecran-->
+  <meta charset="UTF-8"> <!-- pour les accents -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- adapte taille écran -->
   <title>LabVert — Dashboard</title>
- <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet"><!--police-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script><!--libraire chart-->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet"><!--police-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script><!--librairie chart-->
   <link rel="stylesheet" href="index.css"><!--style fichier-->
 </head>
 <body>
 
+  <!-- Titre de la plante -->
+  <h2 id="plantTitle"></h2>
+
   <!-- Carte température -->
-  <div class="sensor-card"><!-- boîte principale (la carte)-->
-    <div class="sensor-label"> Température
-
-    </div><!-- boîte avc titre-->
-    <div class="sensor-value" id="tempVal">22<span class="sensor-unit">°C
-
-    </span></div><!-- boîte donnes+unite-->
+  <div class="sensor-card">
+    <div class="sensor-label">Température</div>
+    <div class="sensor-value" id="tempVal">22<span class="sensor-unit">°C</span></div>
   </div>
 
   <!-- Carte humidité -->
   <div class="sensor-card">
-    <div class="sensor-label"> Humidité du sol</div>
+    <div class="sensor-label">Humidité du sol</div>
     <div class="sensor-value" id="humVal">68<span class="sensor-unit">%</span></div>
   </div>
 
   <!-- Carte arrosage -->
   <div class="arrosage-card">
-    <div class="sensor-label"> Arrosage</div>
-    <!--Partie automatique-->
+    <div class="sensor-label">Arrosage</div>
+
+    <!-- Partie automatique -->
     <div class="toggle-row">
-      <span class="toggle-label">Mode automatique</span> <!-- vraie checkbox (cachée par CSS)-->
-      <label class="toggle"><!--visuel qu'on voit (le beau toggle)-->
-        <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)"><!--appelle toggleMode() au clic-->
+      <span class="toggle-label">Mode automatique</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)">
         <span class="toggle-slider"></span>
       </label>
     </div>
-    <!--Partie manuel-->
+
+    <!-- Partie manuel -->
     <div class="toggle-row">
-      <span class="toggle-label">Mode manuel</span> <!--appelle toggleMode() au clic-->
+      <span class="toggle-label">Mode manuel</span>
       <label class="toggle">
         <input type="checkbox" id="togglePompe">
         <span class="toggle-slider"></span>
       </label>
     </div>
   </div>
- 
- 
-<!-- Carte statistiques -->
-<div class="stats-card"> <!-- boite principal-->
-  <div class="sensor-label"> Statistiques</div><!--titre-->
- <div class="stat-row" id="statTemp" onclick="ouvrirModal('Température', '--', '--', '--', '--')"><!--appele qd je clique-->
-  <span class="stat-name">Température</span>
-  <span class="stat-arrow">›</span><!--fleche-->
-</div>
-<div class="stat-row" id="statHum" onclick="ouvrirModal('Humidité', '--', '--', '--', '--')">
-  <span class="stat-name">Humidité</span>
-  <span class="stat-arrow">›</span><!--fleche-->
-</div>
-</div>
+
+  <!-- Carte statistiques -->
+  <div class="stats-card">
+    <div class="sensor-label">Statistiques</div>
+    <div class="stat-row" id="statTemp" onclick="ouvrirModal('Température', '--', '--', '--', '--')">
+      <span class="stat-name">Température</span>
+      <span class="stat-arrow">›</span>
+    </div>
+    <div class="stat-row" id="statHum" onclick="ouvrirModal('Humidité', '--', '--', '--', '--')">
+      <span class="stat-name">Humidité</span>
+      <span class="stat-arrow">›</span>
+    </div>
+  </div>
 
   <!-- Graphique -->
-  <div class="chart-card"> <!-- boîte avc le graphique-->
-    <canvas id="monGraphique"><!-- zone où Chart.js dessine le graphique-->
-      </canvas><!--balise HTML spéciale qui crée une zone de dessin.-->
+  <div class="chart-card">
+    <canvas id="monGraphique"></canvas>
   </div>
+
   <!-- POPUP STATISTIQUES -->
-<!-- Fond sombre derrière le popup -->
-<!-- onclick="fermerModal(event)" = ferme si on clique sur le fond -->
-<div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
+  <div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
+    <div class="modal">
+      <h2 id="modalTitre">Statistiques</h2>
 
-  <!-- La carte blanche du popup -->
-  <div class="modal">
-
-    <!-- Titre du popup, remplacé par le JS au clic -->
-    <h2 id="modalTitre">Statistiques</h2>
-
-    <!-- Grille 2x2 : 4 cases pour les stats -->
-    <div class="modal-stats">
-
-      <!-- Case Médiane -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Médiane</div>
-        <!-- id="modalMediane" : le JS met la vraie valeur ici -->
-        <div class="modal-stat-val" id="modalMediane">—</div>
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <div class="modal-stat-label">Médiane</div>
+          <div class="modal-stat-val" id="modalMediane">—</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Moyenne</div>
+          <div class="modal-stat-val" id="modalMoyenne">—</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Minimum</div>
+          <div class="modal-stat-val" id="modalMin">—</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Maximum</div>
+          <div class="modal-stat-val" id="modalMax">—</div>
+        </div>
       </div>
 
-      <!-- Case Moyenne -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Moyenne</div>
-        <div class="modal-stat-val" id="modalMoyenne">—</div>
-      </div>
+      <canvas id="modalGraphique" height="100"></canvas>
+      <br><br>
 
-      <!-- Case Minimum -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Minimum</div>
-        <div class="modal-stat-val" id="modalMin">—</div>
-      </div>
-
-      <!-- Case Maximum -->
-      <div class="modal-stat">
-        <div class="modal-stat-label">Maximum</div>
-        <div class="modal-stat-val" id="modalMax">—</div>
-      </div>
-
+      <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">
+        Fermer
+      </button>
     </div>
-    <!-- fin grille -->
-
-    <!-- Zone de dessin pour le graphique à barres -->
-    <canvas id="modalGraphique" height="100"></canvas>
-    <br><br>
-
-    <!-- Bouton pour fermer le popup -->
-    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">
-      Fermer
-    </button>
-
   </div>
-  <!-- fin carte blanche -->
-
-</div>
-<!-- fin fond sombre -->
 
   <script src="index.js"></script>
 </body>

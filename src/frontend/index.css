@@ -1,17 +1,17 @@
-/* Fond de la page */
+/* ── FOND DE LA PAGE ── */
 body {
   font-family: 'Roboto Slab', serif;
   background: #f1f8f1;
   padding: 30px;
   display: grid;
   grid-template-columns: 220px 220px 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   gap: 20px;
 }
 
-/* Style des cartes température et humidité */
+/* ── CARTES TEMPÉRATURE / HUMIDITÉ ── */
 .sensor-card {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 28px;
   box-shadow: 0 4px 24px rgba(27,94,32,0.10);
@@ -36,22 +36,21 @@ body {
   color: #2e7d32;
 }
 
-/* Carte graphique */
+/* ── CARTE GRAPHIQUE ── */
 .chart-card {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 28px;
   box-shadow: 0 4px 24px rgba(27,94,32,0.10);
 }
 
-/* Carte arrosage */
+/* ── CARTE ARROSAGE ── */
 .arrosage-card {
   background: #1b5e20;
   border-radius: 24px;
   padding: 28px;
   box-shadow: 0 8px 32px rgba(27,94,32,0.18);
   color: #a5d6a7;
-  font-family: 'Roboto Slab', serif;
 }
 
 .toggle-row {
@@ -61,9 +60,22 @@ body {
   margin-bottom: 14px;
 }
 
-.toggle-label { font-size: 0.9rem; font-weight: 500; }
-.toggle { position: relative; width: 48px; height: 26px; }
-.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.toggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
 .toggle-slider {
   position: absolute;
@@ -77,19 +89,26 @@ body {
 .toggle-slider::before {
   content: '';
   position: absolute;
-  width: 20px; height: 20px;
-  left: 3px; top: 3px;
-  background: white;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  background: #ffffff;
   border-radius: 50%;
   transition: 0.3s;
 }
 
-.toggle input:checked + .toggle-slider { background: #69f0ae; }
-.toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+.toggle input:checked + .toggle-slider {
+  background: #69f0ae;
+}
 
-/* Carte statistiques */
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(22px);
+}
+
+/* ── CARTE STATISTIQUES ── */
 .stats-card {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 28px;
   box-shadow: 0 4px 24px rgba(27,94,32,0.10);
@@ -106,13 +125,33 @@ body {
   border-radius: 8px;
 }
 
-.stat-row:last-child { border-bottom: none; }
-.stat-row:hover { background: #e8f5e9; padding: 10px 8px; }
-.stat-name  { font-size: 0.88rem; color: #4a6a4a; font-weight: 500; }
-.stat-val   { font-weight: 600; color: #1b5e20; font-size: 0.95rem; }
-.stat-arrow { color: #a5d6a7; font-size: 0.8rem; }
+.stat-row:last-child {
+  border-bottom: none;
+}
 
-/* Popup */
+.stat-row:hover {
+  background: #e8f5e9;
+  padding: 10px 8px;
+}
+
+.stat-name {
+  font-size: 0.88rem;
+  color: #4a6a4a;
+  font-weight: 500;
+}
+
+.stat-val {
+  font-weight: 600;
+  color: #1b5e20;
+  font-size: 0.95rem;
+}
+
+.stat-arrow {
+  color: #a5d6a7;
+  font-size: 0.8rem;
+}
+
+/* ── POPUP STATISTIQUES ── */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -123,17 +162,22 @@ body {
   justify-content: center;
 }
 
-.modal-overlay.open { display: flex; }
+.modal-overlay.open {
+  display: flex;
+}
 
 .modal {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 36px;
   width: 400px;
   max-width: 90vw;
 }
 
-.modal h2 { color: #1b5e20; margin-bottom: 20px; }
+.modal h2 {
+  color: #1b5e20;
+  margin-bottom: 20px;
+}
 
 .modal-stats {
   display: grid;
@@ -142,15 +186,31 @@ body {
   margin-bottom: 24px;
 }
 
-.modal-stat { background: #e8f5e9; border-radius: 14px; padding: 16px; }
-.modal-stat-label { font-size: 0.75rem; color: #4a6a4a; font-weight: 600; text-transform: uppercase; }
-.modal-stat-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #1b5e20; margin-top: 4px; }
+.modal-stat {
+  background: #e8f5e9;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.modal-stat-label {
+  font-size: 0.75rem;
+  color: #4a6a4a;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.modal-stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #1b5e20;
+  margin-top: 4px;
+}
 
 .modal-close {
   width: 100%;
   padding: 12px;
   background: #2e7d32;
-  color: white;
+  color: #ffffff;
   border: none;
   border-radius: 14px;
   font-family: 'Roboto Slab', serif;
@@ -158,25 +218,25 @@ body {
   cursor: pointer;
 }
 
-/* ── DISPOSITION ── */
+/* ── DISPOSITION GRID ── */
 .stats-card {
   grid-column: 1;
-  grid-row: 1 / 3; /* s'étend sur 2 lignes */
+  grid-row: 1 / 3;
 }
 
-.sensor-card:nth-child(2) {
+.sensor-card:nth-of-type(1) {
   grid-column: 2;
   grid-row: 1;
 }
 
-.sensor-card:nth-child(3) {
+.sensor-card:nth-of-type(2) {
   grid-column: 2;
   grid-row: 2;
 }
 
 .chart-card {
   grid-column: 3;
-  grid-row: 1 / 3; /* s'étend sur 2 lignes */
+  grid-row: 1 / 3;
 }
 
 .arrosage-card {
