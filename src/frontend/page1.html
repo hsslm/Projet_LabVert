@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LabVert</title>
+
+  <link rel="stylesheet" href="page1.css">
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h1>LabVert </h1>
+
+    <form id="plantForm">
+
+      <!-- Nom -->
+      <input type="text" id="plantName" placeholder="Entrez le nom de votre plante" required>
+
+      <!-- Type -->
+      <input type="text" id="plantType" placeholder="Entrez le type de votre plante " required>
+
+      <button type="submit" class="btn">Continuer</button>
+
+    </form>
+
+  </div>
+
+  <script>
+    document.getElementById("plantForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      let nom = document.getElementById("plantName").value;
+      let type = document.getElementById("plantType").value;
+
+      // Vérification simple
+      if(nom.trim() === "" || type.trim() === "") {
+        alert("Remplis tous les champs !");
+        return;
+      }
+
+      // Stocker les données
+      localStorage.setItem("planteNom", nom);
+      localStorage.setItem("planteType", type);
+
+      // Aller à la page suivante
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>
