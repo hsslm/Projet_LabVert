@@ -1,0 +1,166 @@
+/* ── RESET ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ 
+body {
+  font-family: 'DM Sans', Arial, Helvetica, sans-serif;
+  background-image: url('bg.jpg'); /* ou une couleur si tu veux */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1b5e20;
+}
+ 
+/* ── HEADER / TITRE ── */
+header, .card h1, .card h2 {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+}
+ 
+header h1, .card h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+ 
+.subtitle {
+  font-size: 1.2rem;
+  color: #388e3c;
+  margin-bottom: 20px;
+}
+ 
+/* ── CARDS ── */
+.cards, .container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+ 
+.card {
+  background: rgba(255,255,255,0.2); /* flou style frosted glass */
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 40px 30px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+ 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+ 
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+ 
+.card p {
+  font-size: 0.95rem;
+  color: #3a5a3a;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+ 
+/* ── VALEURS / SENSORS ── */
+.value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1b5e20;
+  margin-bottom: 5px;
+}
+ 
+.label {
+  font-size: 1rem;
+  color: #2d4a2d;
+}
+ 
+/* ── BOUTONS ── */
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #2e7d32;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+}
+ 
+.btn:hover {
+  background: #1b5e20;
+  transform: translateY(-2px);
+}
+ 
+/* ── CANVAS / GRAPHIQUE ── */
+canvas {
+  margin-top: 30px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+}
+ 
+/* ── MODAL / POPUP ── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+ 
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+ 
+.modal {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+ 
+.modal h2 {
+  margin-bottom: 20px;
+}
+ 
+.modal .modal-stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+ 
+.modal-close {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: none;
+  background: #2e7d32;
+  color: white;
+  cursor: pointer;
+}
+ 
+.modal-close:hover {
+  background: #1b5e20;
+}

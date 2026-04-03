@@ -60,7 +60,7 @@ void loop() {
   WiFiClient client = server.available();
   if (!client) {
     yield();
-    delay(5000);
+    delay(100);
     return;
   }
 
@@ -81,36 +81,38 @@ void loop() {
     return;
   }
 
-  if (req.indexOf("GET /style.css") >= 0) {
-    File file = SPIFFS.open("/style.css", "r");
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-Type: text/css");
-    client.println("Connection: close");
-    client.println();
-    while (file.available()) client.write(file.read());
-    file.close();
-    return;
-  }
+    // Servir n'importe quel fichier depuis SPIFFS
+  String path = req.substring(4);
+  int spacePos = path.indexOf(' ');
+  if (spacePos > 0) path = path.substring(0, spacePos);
 
-  if (req.indexOf("GET /script.js") >= 0) {
-    File file = SPIFFS.open("/script.js", "r");
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-Type: application/javascript");
-    client.println("Connection: close");
-    client.println();
-    while (file.available()) client.write(file.read());
-    file.close();
-    return;
-  }
+  if (path == "/" || path == "") path = "/acceuil.html";
 
-  if (req.indexOf("GET /") >= 0) {
-    File file = SPIFFS.open("/index.html", "r");
+  String contentType = "text/plain";
+  if (path.endsWith(".html")) contentType = "text/html";
+  else if (path.endsWith(".css")) contentType = "text/css";
+  else if (path.endsWith(".js")) contentType = "application/javascript";
+  else if (path.endsWith(".jpg")) contentType = "image/jpeg";
+  else if (path.endsWith(".png")) contentType = "image/png";
+
+  if (SPIFFS.exists(path)) {
+    File file = SPIFFS.open(path, "r");
     client.println("HTTP/1.1 200 OK");
-    client.println("Content-Type: text/html");
+    client.println("Content-Type: " + contentType);
     client.println("Connection: close");
     client.println();
-    while (file.available()) client.write(file.read());
+    uint8_t buf[512];
+    size_t len;
+while ((len = file.read(buf, sizeof(buf))) > 0) {
+    client.write(buf, len);
+}
+
     file.close();
-    return;
+  } else {
+    client.println("HTTP/1.1 404 Not Found");
+    client.println("Connection: close");
+    client.println();
+    client.println("404 Not Found");
   }
 }
+  

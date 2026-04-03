@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LabVert - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <h2 id="plantTitle"></h2>
+
+  <div class="stats-card">
+    <div class="sensor-label">Statistiques</div>
+
+    <div class="stat-section">
+      <div class="stat-section-title">Température</div>
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-item-label">Moyenne</span><span class="stat-item-val" id="statTempMoy">--°C</span></div>
+        <div class="stat-item"><span class="stat-item-label">Médiane</span><span class="stat-item-val" id="statTempMed">--°C</span></div>
+        <div class="stat-item"><span class="stat-item-label">Min</span><span class="stat-item-val" id="statTempMin">--°C</span></div>
+        <div class="stat-item"><span class="stat-item-label">Max</span><span class="stat-item-val" id="statTempMax">--°C</span></div>
+      </div>
+    </div>
+
+    <div class="stat-section">
+      <div class="stat-section-title">Humidité</div>
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-item-label">Moyenne</span><span class="stat-item-val" id="statHumMoy">--%</span></div>
+        <div class="stat-item"><span class="stat-item-label">Médiane</span><span class="stat-item-val" id="statHumMed">--%</span></div>
+        <div class="stat-item"><span class="stat-item-label">Min</span><span class="stat-item-val" id="statHumMin">--%</span></div>
+        <div class="stat-item"><span class="stat-item-label">Max</span><span class="stat-item-val" id="statHumMax">--%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sensor-card">
+    <div class="sensor-label">Température</div>
+    <div class="sensor-value" id="tempVal">--<span class="sensor-unit">°C</span></div>
+  </div>
+
+  <div class="sensor-card">
+    <div class="sensor-label">Humidité du sol</div>
+    <div class="sensor-value" id="humVal">--<span class="sensor-unit">%</span></div>
+  </div>
+
+  <div class="charts-column">
+    <div class="chart-card">
+      <div class="sensor-label">Température (°C)</div>
+      <canvas id="chartTemp"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="sensor-label">Humidité (%)</div>
+      <canvas id="chartHum"></canvas>
+    </div>
+  </div>
+
+  <div class="arrosage-card">
+    <div class="sensor-label">Arrosage</div>
+    <div class="toggle-row">
+      <span class="toggle-label">Mode automatique</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Mode manuel</span>
+      <label class="toggle">
+        <input type="checkbox" id="togglePompe">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
