@@ -1,22 +1,32 @@
-#!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+import shutil
 import os
-import sys
 
+frontend_dir = "src/frontend/"
+data_dir = "src/data/"
 
-def main():
-    """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
-    execute_from_command_line(sys.argv)
+os.makedirs(data_dir, exist_ok=True)
 
+files = [
+    "acceuil.html",
+    "acceuil.css",
+    "index.html",
+    "index.js",
+    "page1.html",
+    "page1.css",
+    "script.js",  
+    "bg.jpg"
+]
 
-if __name__ == '__main__':
-    main()
+print("Copie automatique du frontend vers data/...")
+
+for f in files:
+    src = os.path.join(frontend_dir, f)
+    dst = os.path.join(data_dir, f)
+
+    if os.path.exists(src):
+        shutil.copy(src, dst)
+        print(f"Copié : {f}")
+    else:
+        print(f"INTROUVABLE : {src}")
+
+print("Terminé.")

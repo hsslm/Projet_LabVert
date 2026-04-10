@@ -37,25 +37,8 @@ h1 {
   margin-bottom: 25px;
 }
 
-/* ── FORM ── */
-form {
-  width: 100%;
-}
-/* ── SELECT PERSONNALISÉ ── */
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background: #f9fdf9 url("data:image/svg+xml;utf8,<svg fill='%231b5e20' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.5 7.5l4.5 4.5 4.5-4.5'/></svg>") no-repeat right 15px center;
-
-  background-size: 16px;
-  cursor: pointer;
-}
-
-/* ── INPUTS + SELECT ── */
-input,
-select {
+/* ── INPUTS ── */
+input {
   width: 100%;
   padding: 14px 16px;
   margin-bottom: 16px;
@@ -66,13 +49,42 @@ select {
   transition: all 0.2s ease;
 }
 
-/* Focus */
-input:focus,
-select:focus {
+input:focus {
   border-color: #2e7d32;
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(46,125,50,0.15);
   outline: none;
+}
+
+/* ── WRAPPER POUR ALIGNER LES SUGGESTIONS ── */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* ── SUGGESTIONS ── */
+#suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* 🔥 même largeur que l’input */
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  display: none;
+  z-index: 10;
+}
+
+#suggestions div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#suggestions div:hover {
+  background: #e8f5e9;
 }
 
 /* ── BOUTON ── */
@@ -93,10 +105,6 @@ select:focus {
 .btn:hover {
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 12px 25px rgba(46,125,50,0.45);
-}
-
-.btn:active {
-  transform: translateY(0);
 }
 
 /* ── ANIMATION ── */

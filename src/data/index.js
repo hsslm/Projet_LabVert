@@ -1,3 +1,8 @@
+
+const API_URL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+  ? "http://127.0.0.1:3000"
+  : "http://172.20.10.3:3000";
+
 const nomPlante = localStorage.getItem("planteNom");
 document.getElementById("plantTitle").textContent = nomPlante || "LabVert";
 
@@ -21,9 +26,7 @@ const chartTemp = new Chart(ctxTemp, {
   options: {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: {
-      y: { title: { display: true, text: '°C' } }
-    }
+    scales: { y: { title: { display: true, text: '°C' } } }
   }
 });
 
@@ -44,31 +47,25 @@ const chartHum = new Chart(ctxHum, {
   options: {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: {
-      y: { title: { display: true, text: '%' }, min: 0, max: 100 }
-    }
+    scales: { y: { title: { display: true, text: '%' }, min: 0, max: 100 } }
   }
 });
 
 function chargerStats() {
-  fetch('http://172.20.10.3:3000/stats/')
+  fetch(`${API_URL}/stats/`)
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
-
       chartTemp.data.labels = data.labels;
       chartTemp.data.datasets[0].data = data.temperature.historique.map(Number);
       chartTemp.update();
-
       chartHum.data.labels = data.labels;
       chartHum.data.datasets[0].data = data.humidite.historique.map(Number);
       chartHum.update();
-
       document.getElementById('statTempMoy').textContent = data.temperature.moyenne + '°C';
       document.getElementById('statTempMed').textContent = data.temperature.mediane + '°C';
       document.getElementById('statTempMin').textContent = data.temperature.minimum + '°C';
       document.getElementById('statTempMax').textContent = data.temperature.maximum + '°C';
-
       document.getElementById('statHumMoy').textContent = data.humidite.moyenne + '%';
       document.getElementById('statHumMed').textContent = data.humidite.mediane + '%';
       document.getElementById('statHumMin').textContent = data.humidite.minimum + '%';
@@ -77,7 +74,7 @@ function chargerStats() {
 }
 
 function mettreAJour() {
-  fetch('http://172.20.10.3:3000/latest/')
+  fetch(`${API_URL}/latest/`)
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
