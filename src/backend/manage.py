@@ -9,9 +9,12 @@ os.makedirs(data_dir, exist_ok=True)
 files = [
     "acceuil.html",
     "acceuil.css",
+    "arrosage.html",
     "index.html",
     "index.js",
+    "style.css",
     "page1.html",
+    "plante.html",
     "page1.css",
     "script.js",  
     "bg.jpg"

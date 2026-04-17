@@ -70,6 +70,11 @@ function chargerStats() {
       document.getElementById('statHumMed').textContent = data.humidite.mediane + '%';
       document.getElementById('statHumMin').textContent = data.humidite.minimum + '%';
       document.getElementById('statHumMax').textContent = data.humidite.maximum + '%';
+
+      // Évaluer l'état dynamique
+      const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
+      const dernierTemp = data.temperature.historique[data.temperature.historique.length - 1];
+      if (typeof evaluerEtat === 'function') evaluerEtat(dernierHum, dernierTemp);
     });
 }
 
