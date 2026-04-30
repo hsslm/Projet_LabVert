@@ -1,18 +1,26 @@
 import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uri = "mongodb://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@ac-xh8jbhi-shard-00-00.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-01.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-02.fyg0v3g.mongodb.net:27017/?ssl=true&replicaSet=atlas-j6agm8-shard-0&authSource=admin&appName=LabVert-cloud";
+// Connexion MongoDB
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error("ERREUR: MONGODB_URI non trouvé dans .env");
+  process.exit(1);
+}
 
 const client = new MongoClient(uri);
 await client.connect();
 console.log("Connecté à MongoDB !");
 
-// --- Enregistrer les données envoyées par l’ESP32 ---
+// Reçoit les données du capteur ESP32 et les sauvegarde en DB
 app.post("/data", async (req, res) => {
   try {
     const { temperature, humidity } = req.body;
@@ -26,7 +34,7 @@ app.post("/data", async (req, res) => {
   }
 });
 
-// --- Dernière mesure ---
+// Retourne la dernière mesure (utilisée par le dashboard)
 app.get("/latest/", async (req, res) => {
   const db = client.db("LabVert");
   const data = await db.collection("mesures").find().sort({ date: -1 }).limit(1).toArray();
@@ -34,7 +42,7 @@ app.get("/latest/", async (req, res) => {
   res.json({ temperature: data[0].temperature, humidity: data[0].humidity });
 });
 
-// --- Statistiques ---
+// Retourne les statistiques des 50 dernières mesures (min, max, moyenne, médiane)
 app.get("/stats/", async (req, res) => {
   const db = client.db("LabVert");
   const data = await db.collection("mesures").find().sort({ date: -1 }).limit(50).toArray();
@@ -52,7 +60,7 @@ app.get("/stats/", async (req, res) => {
   });
 });
 
-// --- Liste locale de plantes ---
+// Liste des plantes disponibles pour le sélecteur du dashboard
 app.get("/plantes", (req, res) => {
   res.json([
     "Aloe Vera","Basilic","Lavande","Menthe","Pothos","Monstera","Ficus","Cactus","Orchidée",

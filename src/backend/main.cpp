@@ -1,17 +1,21 @@
+// LabVert - Firmware ESP32
+// Lit DHT11 et envoie données à l'API Node.js
+
 #include <WiFi.h>
 #include <DHT.h>
 #include <HTTPClient.h>
 #include <FS.h>
 #include <SPIFFS.h>
 
+// Configuration - À adapter selon votre réseau
 const char* ssid = "batman";
 const char* motDePasse = "selma1502";
+const char* apiUrl = "http://172.20.10.3:3000/data";
 
+// Capteur DHT11 sur GPIO 4
 #define DHTPIN 4
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
-
-const char* apiUrl = "http://172.20.10.3:3000/data";
 
 WiFiServer server(80);
 
@@ -19,23 +23,22 @@ void setup() {
   Serial.begin(115200);
   dht.begin();
 
+  // Fichiers statiques (HTML/CSS/JS)
   if (!SPIFFS.begin(true)) {
     Serial.println("Erreur SPIFFS");
     return;
   }
 
-  Serial.println("Connexion au WiFi...");
+  Serial.println("Connexion WiFi...");
   WiFi.begin(ssid, motDePasse);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
 
-  Serial.println("\nWiFi connecté !");
-  Serial.print("Adresse IP: ");
+  Serial.println("\nWiFi connecté");
+  Serial.print("IP: ");
   Serial.println(WiFi.localIP());
-
   server.begin();
 }
 
@@ -44,19 +47,18 @@ void loop() {
   float t = dht.readTemperature();
 
   if (!isnan(h) && !isnan(t)) {
+    // Envoyer au serveur API
     HTTPClient http;
     http.begin(apiUrl);
     http.addHeader("Content-Type", "application/json");
     http.setTimeout(5000);
 
     String json = "{\"temperature\": " + String(t) + ", \"humidity\": " + String(h) + "}";
-    int httpResponseCode = http.POST(json);
-
-    Serial.print("Réponse API: ");
-    Serial.println(httpResponseCode);
+    http.POST(json);
     http.end();
   }
 
+  // Serveur web pour les requêtes locales (HTML/CSS/JS)
   WiFiClient client = server.available();
   if (!client) {
     yield();
@@ -64,12 +66,11 @@ void loop() {
     return;
   }
 
-  Serial.println("Nouvelle requête HTTP");
   while (!client.available()) delay(1);
-
   String req = client.readStringUntil('\r');
   client.readStringUntil('\n');
 
+  // Endpoint pour accéder directement aux données du capteur
   if (req.indexOf("GET /data") >= 0) {
     float h2 = dht.readHumidity();
     float t2 = dht.readTemperature();
@@ -81,7 +82,7 @@ void loop() {
     return;
   }
 
-    // Servir n'importe quel fichier depuis SPIFFS
+  // Servir les fichiers statiques
   String path = req.substring(4);
   int spacePos = path.indexOf(' ');
   if (spacePos > 0) path = path.substring(0, spacePos);

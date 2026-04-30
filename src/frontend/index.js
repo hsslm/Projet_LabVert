@@ -1,4 +1,6 @@
+// LabVert Dashboard
 
+// Auto-detect API URL (localhost ou réseau)
 const API_URL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
   ? "http://127.0.0.1:3000"
   : "http://172.20.10.3:3000";
@@ -30,6 +32,7 @@ const chartTemp = new Chart(ctxTemp, {
   }
 });
 
+// Graphique de l'humidité
 const chartHum = new Chart(ctxHum, {
   type: 'line',
   data: {
@@ -51,6 +54,7 @@ const chartHum = new Chart(ctxHum, {
   }
 });
 
+// Charge les stats et met à jour les graphiques
 function chargerStats() {
   fetch(`${API_URL}/stats/`)
     .then(r => r.json())
@@ -71,13 +75,13 @@ function chargerStats() {
       document.getElementById('statHumMin').textContent = data.humidite.minimum + '%';
       document.getElementById('statHumMax').textContent = data.humidite.maximum + '%';
 
-      // Évaluer l'état dynamique
       const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
       const dernierTemp = data.temperature.historique[data.temperature.historique.length - 1];
       if (typeof evaluerEtat === 'function') evaluerEtat(dernierHum, dernierTemp);
     });
 }
 
+// Récupère et affiche les dernières valeurs
 function mettreAJour() {
   fetch(`${API_URL}/latest/`)
     .then(r => r.json())
@@ -92,13 +96,17 @@ function mettreAJour() {
     });
 }
 
+// Désactiver mode manuel si mode auto activé
 function toggleMode(el) {
   const pompe = document.getElementById('togglePompe');
   pompe.disabled = el.checked;
   pompe.parentElement.style.opacity = el.checked ? '0.4' : '1';
 }
 
+// Chargement initial
 chargerStats();
 mettreAJour();
-setInterval(mettreAJour, 5000);
-setInterval(chargerStats, 30000);
+
+// Mise à jour continue
+setInterval(mettreAJour, 5000);      // Chaque 5s
+setInterval(chargerStats, 30000);    // Chaque 30s
