@@ -1,0 +1,21 @@
+// Configuration LabVert - COPIEZ CE FICHIER EN config.h ET MODIFIEZ VOS VALEURS
+// NE COMMITEZ PAS config.h SUR GIT - IL CONTIENT VOTRE MOT DE PASSE WIFI
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Configuration WiFi
+// Changez ces valeurs pour correspondre à votre réseau WiFi domestique
+const char* WIFI_SSID = "votre_ssid_wifi";
+const char* WIFI_PASSWORD = "votre_mot_de_passe_wifi";
+
+// Configuration du serveur API
+// L'ESP32 envoiera les données des capteurs à cette URL
+// Changez l'adresse IP si votre serveur API est sur une autre machine
+const char* API_URL = "http://192.168.1.100:3000/data";  // Mettez à jour l'adresse IP
+
+// Configuration du pin du capteur DHT
+#define DHTPIN 4      // Pin GPIO où le capteur DHT11 est connecté
+#define DHTTYPE DHT11 // Type de capteur: DHT11, DHT22, ou DHT21
+
+#endif
