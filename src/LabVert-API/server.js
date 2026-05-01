@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
+import Groq from "groq-sdk";
 
 const app = express();
 app.use(cors());
@@ -85,5 +86,50 @@ app.get("/plantes", (req, res) => {
     "Yucca","Dracaena","Chlorophytum","Begonia","Fougère","Calathea","Zamioculcas","Tradescantia",
     "Anthurium","Rosier","Tulipe","Marguerite","Bambou"
   ]);
+});
+
+// Endpoint pour obtenir des conseils d'entretien via Groq API (GRATUIT)
+app.get("/conseils", async (req, res) => {
+  try {
+    const { plante, temperature, humidity } = req.query;
+
+    if (!plante || temperature === undefined || humidity === undefined) {
+      return res.status(400).json({ erreur: "Paramètres manquants: plante, temperature, humidity" });
+    }
+
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY
+    });
+
+    const message = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: `Tu es un expert en jardinage. Donne 2-3 conseils COURTS et concis pour entretenir une ${plante}.
+
+Conditions actuelles:
+- Température: ${temperature}°C
+- Humidité du sol: ${humidity}%
+
+Format: Utilise des emojis et sois direct et pratique. Chaque conseil sur une ligne.`
+        }
+      ],
+      model: "mixtral-8x7b-32768",
+      max_tokens: 300
+    });
+
+    const conseils = message.choices[0].message.content;
+
+    res.json({
+      plante,
+      temperature: parseFloat(temperature),
+      humidity: parseFloat(humidity),
+      conseils: conseils
+    });
+
+  } catch (err) {
+    console.error("Erreur Groq API:", err.message);
+    res.status(500).json({ erreur: "Erreur lors de la génération des conseils" });
+  }
 });
 
