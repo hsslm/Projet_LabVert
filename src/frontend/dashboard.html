@@ -4,791 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LabVert - Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --green-deep: #1a3a2a;
-      --green-mid: #2d6a4f;
-      --green-light: #52b788;
-      --green-pale: #b7e4c7;
-      --green-bg: #f0f7f1;
-      --white: #ffffff;
-      --gray-soft: #f5f5f0;
-      --gray-text: #6b7c6e;
-      --shadow: 0 8px 32px rgba(26,58,42,0.10);
-      --shadow-lg: 0 16px 48px rgba(26,58,42,0.16);
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--green-bg);
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      grid-template-rows: 1fr;
-    }
-
-    .sidebar {
-      background: var(--green-deep);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 28px 0;
-      gap: 32px;
-    }
-
-    .sidebar-logo {
-      font-family: 'DM Serif Display', serif;
-      color: var(--green-pale);
-      font-size: 1.3rem;
-      letter-spacing: 0.05em;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      flex: 1;
-      margin-top: 16px;
-    }
-
-    .nav-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.2s;
-      color: rgba(183,228,199,0.5);
-      font-size: 1.1rem;
-    }
-
-    .nav-icon.active {
-      background: rgba(183,228,199,0.15);
-      color: var(--green-pale);
-    }
-
-    .nav-icon:hover {
-      background: rgba(183,228,199,0.1);
-      color: var(--green-pale);
-    }
-
-    .main {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      grid-template-rows: auto 1fr;
-      gap: 0;
-      overflow: hidden;
-    }
-
-    .topbar {
-      grid-column: 1 / 3;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 32px;
-      background: var(--white);
-      border-bottom: 1px solid rgba(26,58,42,0.06);
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: var(--gray-text);
-    }
-
-    .topbar-left .sep { color: var(--green-pale); }
-
-    .topbar-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.05rem;
-      color: var(--green-deep);
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .search-bar {
-      background: var(--green-bg);
-      border: none;
-      border-radius: 20px;
-      padding: 8px 18px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      color: var(--green-deep);
-      outline: none;
-      width: 180px;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--green-mid), var(--green-light));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .center-panel {
-      background: var(--white);
-      padding: 36px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      overflow-y: auto;
-    }
-
-    .plant-hero {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-
-    .plant-name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2rem;
-      color: var(--green-deep);
-      line-height: 1.1;
-    }
-
-    .plant-subtitle {
-      font-size: 0.82rem;
-      color: var(--gray-text);
-      margin-top: 4px;
-    }
-
-    .status-badge {
-      background: var(--green-bg);
-      color: var(--green-mid);
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green-light);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
-    }
-
-    .sensor-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .sensor-card {
-      background: var(--green-bg);
-      border-radius: 20px;
-      padding: 22px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sensor-card::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      right: -20px;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: rgba(82,183,136,0.12);
-    }
-
-    .sensor-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-text);
-      margin-bottom: 10px;
-    }
-
-    .sensor-value {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.4rem;
-      color: var(--green-deep);
-      line-height: 1;
-    }
-
-    .sensor-unit {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      color: var(--green-mid);
-    }
-
-    .chart-section {
-      background: var(--green-bg);
-      border-radius: 20px;
-      padding: 22px 24px;
-    }
-
-    .chart-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .chart-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--green-deep);
-    }
-
-    .chart-tabs {
-      display: flex;
-      gap: 8px;
-    }
-
-    .chart-tab {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--gray-text);
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.2s;
-    }
-
-    .chart-tab.active {
-      background: var(--green-deep);
-      color: white;
-    }
-
-    .right-panel {
-      background: var(--green-bg);
-      border-left: 1px solid rgba(26,58,42,0.06);
-      padding: 32px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      overflow-y: auto;
-    }
-
-    .panel-section-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-text);
-      margin-bottom: 14px;
-    }
-
-    .details-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    .detail-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--green-bg);
-    }
-
-    .detail-row:last-child { border-bottom: none; }
-
-    .detail-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .detail-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background: var(--green-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-    }
-
-    .detail-name {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--green-deep);
-    }
-
-    .detail-sub {
-      font-size: 0.72rem;
-      color: var(--gray-text);
-    }
-
-    .detail-val {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--green-mid);
-    }
-
-    .arrosage-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-    }
-
-    .toggle-label {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--green-deep);
-    }
-
-    .toggle {
-      position: relative;
-      width: 44px;
-      height: 24px;
-    }
-
-    .toggle input { opacity: 0; width: 0; height: 0; }
-
-    .toggle-slider {
-      position: absolute;
-      inset: 0;
-      background: #d4e8da;
-      border-radius: 100px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .toggle-slider::before {
-      content: '';
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.3s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-
-    .toggle input:checked + .toggle-slider { background: var(--green-light); }
-    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .stat-mini {
-      background: var(--white);
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .stat-mini-label {
-      font-size: 0.7rem;
-      color: var(--gray-text);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .stat-mini-val {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.3rem;
-      color: var(--green-deep);
-      margin-top: 4px;
-    }
-
-    .center-panel > * {
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .center-panel > *:nth-child(1) { animation-delay: 0.05s; }
-    .center-panel > *:nth-child(2) { animation-delay: 0.1s; }
-    .center-panel > *:nth-child(3) { animation-delay: 0.15s; }
-    .center-panel > *:nth-child(4) { animation-delay: 0.2s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Écrans d'onboarding - Accueil et Configuration */
-    .fullscreen-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      background-size: cover;
-      background-position: center;
-    }
-
-    /* Écran de bienvenue */
-    .welcome-screen {
-      background-color: var(--green-deep);
-    }
-
-    .welcome-content {
-      text-align: center;
-      color: var(--white);
-      max-width: 500px;
-      padding: 40px;
-    }
-
-    .welcome-content h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      line-height: 1.2;
-    }
-
-    .welcome-content p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-      line-height: 1.6;
-    }
-
-    .welcome-btn {
-      margin-top: 40px;
-      padding: 14px 40px;
-      background: var(--green-light);
-      color: var(--white);
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .welcome-btn:hover {
-      background: var(--green-mid);
-    }
-
-    /* Écran de configuration */
-    .setup-screen {
-      background-color: var(--green-deep);
-    }
-
-    .setup-content {
-      max-width: 400px;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .setup-content h1 {
-      font-family: 'DM Serif Display', serif;
-      color: var(--green-deep);
-      margin-bottom: 30px;
-      font-size: 1.8rem;
-    }
-
-    .setup-form {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group label {
-      color: var(--green-deep);
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .form-select, .form-input {
-      padding: 12px 16px;
-      border: 2px solid var(--green-pale);
-      border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      color: var(--green-deep);
-      transition: border-color 0.2s;
-    }
-
-    .form-select:focus, .form-input:focus {
-      outline: none;
-      border-color: var(--green-light);
-      background: var(--green-bg);
-    }
-
-    .form-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232d6a4f' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-      background-color: var(--white);
-    }
-
-    .setup-btn {
-      padding: 14px;
-      background: var(--green-light);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-      margin-top: 10px;
-    }
-
-    .setup-btn:hover {
-      background: var(--green-mid);
-    }
-  </style>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
-  <!-- Dashboard principal -->
-  <div id="main-dashboard" style="display: grid; grid-template-columns: 72px 1fr; grid-template-rows: 1fr; width: 100%; height: 100vh;">
-    <div class="sidebar">
-      <div class="sidebar-logo">L</div>
-      <nav class="sidebar-nav">
-        <div class="nav-icon active">🌿</div>
-        <div class="nav-icon">📊</div>
-        <div class="nav-icon">💧</div>
-        <div class="nav-icon">⚙️</div>
-      </nav>
+  <h2 id="plantTitle"></h2>
+
+  <div class="sensor-card">
+    <div class="sensor-label">Température</div>
+    <div class="sensor-value" id="tempVal">22<span class="sensor-unit">°C</span></div>
+  </div>
+
+  <div class="sensor-card">
+    <div class="sensor-label">Humidité du sol</div>
+    <div class="sensor-value" id="humVal">68<span class="sensor-unit">%</span></div>
+  </div>
+
+  <div class="arrosage-card">
+    <div class="sensor-label">Arrosage</div>
+    <div class="toggle-row">
+      <span class="toggle-label">Mode automatique</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)">
+        <span class="toggle-slider"></span>
+      </label>
     </div>
-
-    <div class="main">
-
-    <div class="topbar">
-      <div class="topbar-left">
-        <span>Analytics</span>
-        <span class="sep">›</span>
-        <span class="topbar-title" id="plantTitle">Ma Plante</span>
-      </div>
-      <div class="topbar-right">
-        <input class="search-bar" type="text" placeholder="Rechercher...">
-        <div class="avatar">SH</div>
-      </div>
-    </div>
-
-    <div class="center-panel">
-
-      <div class="plant-hero">
-        <div>
-          <div class="plant-name" id="plantDisplayName">Chargement...</div>
-          <div class="plant-subtitle" id="plantNickname">LabVert</div>
-        </div>
-        <div class="status-badge">
-          <div class="status-dot"></div>
-          En ligne
-        </div>
-      </div>
-
-      <div class="sensor-row">
-        <div class="sensor-card">
-          <div class="sensor-label">Température</div>
-          <div class="sensor-value" id="tempVal">--<span class="sensor-unit">°C</span></div>
-        </div>
-        <div class="sensor-card">
-          <div class="sensor-label">Humidité du sol</div>
-          <div class="sensor-value" id="humVal">--<span class="sensor-unit">%</span></div>
-        </div>
-      </div>
-
-      <div class="chart-section">
-        <div class="chart-header">
-          <span class="chart-title">Historique</span>
-          <div class="chart-tabs">
-            <button class="chart-tab active" onclick="switchChart('temp', this)">Température</button>
-            <button class="chart-tab" onclick="switchChart('hum', this)">Humidité</button>
-          </div>
-        </div>
-        <canvas id="chartTemp" height="80"></canvas>
-        <canvas id="chartHum" height="80" style="display:none"></canvas>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-mini">
-          <div class="stat-mini-label">Temp. moyenne</div>
-          <div class="stat-mini-val" id="statTempMoy">--</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-label">Temp. max</div>
-          <div class="stat-mini-val" id="statTempMax">--</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-label">Hum. moyenne</div>
-          <div class="stat-mini-val" id="statHumMoy">--</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-label">Hum. max</div>
-          <div class="stat-mini-val" id="statHumMax">--</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="right-panel">
-
-      <div>
-        <div class="panel-section-title">Détails de la plante</div>
-        <div class="details-card">
-          <div class="detail-row">
-            <div class="detail-left">
-              <div class="detail-icon">💡</div>
-              <div>
-                <div class="detail-name">Lumière</div>
-                <div class="detail-sub">Condition</div>
-              </div>
-            </div>
-            <div class="detail-val">Indirecte</div>
-          </div>
-          <div class="detail-row">
-            <div class="detail-left">
-              <div class="detail-icon">🌱</div>
-              <div>
-                <div class="detail-name">Sol</div>
-                <div class="detail-sub">État</div>
-              </div>
-            </div>
-            <div class="detail-val" id="solEtat">--</div>
-          </div>
-          <div class="detail-row">
-            <div class="detail-left">
-              <div class="detail-icon">💧</div>
-              <div>
-                <div class="detail-name">Humidité</div>
-                <div class="detail-sub">Niveau</div>
-              </div>
-            </div>
-            <div class="detail-val" id="humNiveau">--</div>
-          </div>
-          <div class="detail-row">
-            <div class="detail-left">
-              <div class="detail-icon">🌡️</div>
-              <div>
-                <div class="detail-name">Température</div>
-                <div class="detail-sub">Statut</div>
-              </div>
-            </div>
-            <div class="detail-val" id="tempStatut">--</div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel-section-title">Arrosage</div>
-        <div class="arrosage-card">
-          <div class="toggle-row">
-            <span class="toggle-label">Mode automatique</span>
-            <label class="toggle">
-              <input type="checkbox" id="toggleAuto" onchange="toggleMode(this)">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-label">Mode manuel</span>
-            <label class="toggle">
-              <input type="checkbox" id="togglePompe">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel-section-title">Statistiques détaillées</div>
-        <div class="stats-grid">
-          <div class="stat-mini">
-            <div class="stat-mini-label">Temp. min</div>
-            <div class="stat-mini-val" id="statTempMin">--</div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-label">Temp. med.</div>
-            <div class="stat-mini-val" id="statTempMed">--</div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-label">Hum. min</div>
-            <div class="stat-mini-val" id="statHumMin">--</div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-label">Hum. med.</div>
-            <div class="stat-mini-val" id="statHumMed">--</div>
-          </div>
-        </div>
-      </div>
-
+    <div class="toggle-row">
+      <span class="toggle-label">Mode manuel</span>
+      <label class="toggle">
+        <input type="checkbox" id="togglePompe">
+        <span class="toggle-slider"></span>
+      </label>
     </div>
   </div>
-  </div>  <!-- Fin du wrapper main-dashboard -->
 
-  <script>
-    const surnom = localStorage.getItem("planteType");
-    document.getElementById("plantDisplayName").textContent = localStorage.getItem("planteNom") || "Ma Plante";
-    document.getElementById("plantNickname").textContent = surnom || "LabVert";
+  <div class="stats-card">
+    <div class="sensor-label">Statistiques</div>
+    <div class="stat-row" id="statTemp" onclick="ouvrirModal('Température', '--', '--', '--', '--')">
+      <span class="stat-name">Température</span>
+      <span class="stat-arrow">›</span>
+    </div>
+    <div class="stat-row" id="statHum" onclick="ouvrirModal('Humidité', '--', '--', '--', '--')">
+      <span class="stat-name">Humidité</span>
+      <span class="stat-arrow">›</span>
+    </div>
+  </div>
 
-    function switchChart(type, btn) {
-      document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('chartTemp').style.display = type === 'temp' ? 'block' : 'none';
-      document.getElementById('chartHum').style.display = type === 'hum' ? 'block' : 'none';
-    }
+  <div class="chart-card">
+    <canvas id="monGraphique"></canvas>
+  </div>
 
-    function toggleMode(el) {
-      const pompe = document.getElementById('togglePompe');
-      pompe.disabled = el.checked;
-      pompe.parentElement.style.opacity = el.checked ? '0.4' : '1';
-    }
+  <div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
+    <div class="modal">
+      <h2 id="modalTitre">Statistiques</h2>
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <div class="modal-stat-label">Médiane</div>
+          <div class="modal-stat-val" id="modalMediane">-</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Moyenne</div>
+          <div class="modal-stat-val" id="modalMoyenne">-</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Minimum</div>
+          <div class="modal-stat-val" id="modalMin">-</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-label">Maximum</div>
+          <div class="modal-stat-val" id="modalMax">-</div>
+        </div>
+      </div>
+      <canvas id="modalGraphique" height="100"></canvas>
+      <br><br>
+      <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">
+        Fermer
+      </button>
+    </div>
+  </div>
 
-    function evaluerEtat(hum, temp) {
-      document.getElementById('solEtat').textContent = hum < 30 ? 'Sec' : hum < 60 ? 'Humide' : 'Très humide';
-      document.getElementById('humNiveau').textContent = hum < 30 ? 'Faible' : hum < 60 ? 'Normal' : 'Élevé';
-      document.getElementById('tempStatut').textContent = temp < 15 ? 'Froid' : temp < 28 ? 'Optimal' : 'Chaud';
-    }
-  </script>
   <script src="index.js"></script>
-
 </body>
 </html>
