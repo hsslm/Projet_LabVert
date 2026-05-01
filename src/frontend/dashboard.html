@@ -372,6 +372,76 @@
       .right-panel { border-left: none; border-top: 1px solid rgba(26,58,42,0.06); }
       .sensor-row { grid-template-columns: 1fr; }
     }
+    .chat-card {
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.chat-msg {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  max-width: 90%;
+}
+
+.chat-msg.bot {
+  background: var(--green-bg);
+  color: var(--green-deep);
+  align-self: flex-start;
+}
+
+.chat-msg.user {
+  background: var(--green-deep);
+  color: white;
+  align-self: flex-end;
+}
+
+.chat-input-row {
+  display: flex;
+  border-top: 1px solid var(--green-bg);
+  padding: 10px 14px;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  border: none;
+  background: var(--green-bg);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--green-deep);
+  outline: none;
+}
+
+.chat-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--green-deep);
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.chat-send:hover { background: var(--green-mid); }
   </style>
 </head>
 <body>
@@ -501,7 +571,18 @@
           <div id="conseilsTexte">Chargement des conseils...</div>
         </div>
       </div>
-
+<div>
+  <div class="panel-section-title">💬 Chat IA</div>
+  <div class="chat-card">
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg bot">👋 Bonjour ! Posez-moi une question sur votre plante.</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Posez une question...">
+      <button class="chat-send" id="chatSend">➤</button>
+    </div>
+  </div>
+</div>
       <div>
         <div class="panel-section-title">Arrosage</div>
         <div class="arrosage-card">

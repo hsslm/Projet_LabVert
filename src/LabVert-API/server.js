@@ -144,3 +144,37 @@ Format: Utilise des emojis et sois direct et pratique. Chaque conseil sur une li
   }
 });
 
+app.post("/chat", async (req, res) => {
+  try {
+    const { message, plante, temperature, humidity } = req.body;
+
+    if (!message) return res.status(400).json({ erreur: "Message manquant" });
+
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+    const completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `Tu es un expert en jardinage qui aide à prendre soin des plantes. 
+L'utilisateur a une ${plante || "plante"} avec ces conditions actuelles:
+- Température: ${temperature || "inconnue"}°C
+- Humidité du sol: ${humidity || "inconnue"}%
+Réponds en français, sois concis et pratique. Utilise des emojis.`
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 300
+    });
+
+    res.json({ reponse: completion.choices[0].message.content });
+  } catch (err) {
+    console.error("Erreur chat:", err.message);
+    res.status(500).json({ erreur: "Erreur chat" });
+  }
+});
+
