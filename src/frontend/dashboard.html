@@ -538,13 +538,6 @@
   </div>
 
   <script>
-    // Initialiser l'affichage de la plante
-    const nomPlante = localStorage.getItem("planteNom");
-    const typePlante = localStorage.getItem("planteType");
-    document.getElementById("plantDisplayName").textContent = nomPlante || "Ma Plante";
-    document.getElementById("plantNickname").textContent = typePlante || "LabVert";
-    document.getElementById("plantTitle").textContent = nomPlante || "Ma Plante";
-
     // Fonction toggle pour mode automatique
     function toggleMode(el) {
       const pompe = document.getElementById('togglePompe');
