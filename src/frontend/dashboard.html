@@ -478,7 +478,7 @@
 
       <div class="plant-hero">
         <div>
-          <div class="plant-name" id="plantDisplayName">Chargement...</div>
+          <div class="plant-name" id="plantDisplayName">Ma Plante</div>
           <div class="plant-subtitle" id="plantNickname">LabVert</div>
         </div>
         <div class="status-badge">
@@ -624,6 +624,58 @@
     </div>
   </div>
 
+  <script>
+    // Initialiser l'affichage de la plante
+    const nomPlante = localStorage.getItem("planteNom");
+    const typePlante = localStorage.getItem("planteType");
+    document.getElementById("plantDisplayName").textContent = nomPlante || "Ma Plante";
+    document.getElementById("plantNickname").textContent = typePlante || "LabVert";
+    document.getElementById("plantTitle").textContent = nomPlante || "Ma Plante";
+
+    // Gestion des boutons du sidebar
+    document.querySelectorAll('.nav-icon').forEach((icon, index) => {
+      icon.addEventListener('click', function() {
+        document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+
+        const labels = ['📊 Informations', '📈 Statistiques', '💧 Arrosage', '⚙️ Paramètres'];
+        if(index < labels.length) {
+          console.log('Navigué vers:', labels[index]);
+        }
+      });
+    });
+
+    // Gestion du toggle automatique (sans contrôler la pompe)
+    document.getElementById('toggleAuto').addEventListener('change', function() {
+      const pompe = document.getElementById('togglePompe');
+      pompe.disabled = this.checked;
+      pompe.parentElement.style.opacity = this.checked ? '0.4' : '1';
+      console.log('Mode automatique:', this.checked ? 'Activé' : 'Désactivé');
+    });
+
+    // Désactiver le toggle pompe au clic (feedback visuel)
+    document.getElementById('togglePompe').addEventListener('click', function(e) {
+      const autoToggle = document.getElementById('toggleAuto');
+      if(autoToggle.checked) {
+        e.preventDefault();
+        return;
+      }
+      console.log('Mode manuel cliqué (non connecté au hardware)');
+    });
+
+    // Gestion du avatar/profil au clic
+    document.querySelector('.avatar').addEventListener('click', function() {
+      console.log('Profil cliqué');
+    });
+
+    // Gestion de la barre de recherche
+    document.querySelector('.search-bar').addEventListener('focus', function() {
+      this.style.borderColor = 'var(--green-light)';
+    });
+    document.querySelector('.search-bar').addEventListener('blur', function() {
+      this.style.borderColor = 'transparent';
+    });
+  </script>
   <script src="index.js"></script>
 
 </body>
