@@ -125,7 +125,7 @@ Conditions actuelles:
 Format: Utilise des emojis et sois direct et pratique. Chaque conseil sur une ligne.`
         }
       ],
-      model: "llama3-8b-8192",
+      model: "llama-3.3-70b-versatile",
       max_tokens: 300
     });
 
