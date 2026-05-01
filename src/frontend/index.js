@@ -87,10 +87,36 @@ function mettreAJour() {
       if (data.erreur) return;
       document.getElementById('tempVal').innerHTML = parseFloat(data.temperature) + '<span class="sensor-unit">°C</span>';
       document.getElementById('humVal').innerHTML = parseFloat(data.humidity) + '<span class="sensor-unit">%</span>';
+
+      // Charger les conseils IA
+      const plante = localStorage.getItem("planteNom");
+      if (plante) {
+        chargerConseils(plante, data.temperature, data.humidity);
+      }
     })
     .catch(() => {
       document.getElementById('tempVal').innerHTML = '--<span class="sensor-unit">°C</span>';
       document.getElementById('humVal').innerHTML = '--<span class="sensor-unit">%</span>';
+    });
+}
+
+// Charge les conseils IA via Claude
+function chargerConseils(plante, temperature, humidity) {
+  const conseilsPanel = document.getElementById('conseilsTexte');
+  if (!conseilsPanel) return;
+
+  fetch(`${API_URL}/conseils?plante=${encodeURIComponent(plante)}&temperature=${temperature}&humidity=${humidity}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.erreur) {
+        conseilsPanel.textContent = "Impossible de charger les conseils.";
+        return;
+      }
+      conseilsPanel.textContent = data.conseils;
+    })
+    .catch(err => {
+      console.error("Erreur conseils:", err);
+      conseilsPanel.textContent = "Conseils non disponibles";
     });
 }
 
