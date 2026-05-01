@@ -625,10 +625,8 @@
   </div>
 
   <script>
-    const nomPlante = localStorage.getItem("planteNom");
     const surnom = localStorage.getItem("planteType");
-    document.getElementById("plantTitle").textContent = nomPlante || "Ma Plante";
-    document.getElementById("plantDisplayName").textContent = nomPlante || "Ma Plante";
+    document.getElementById("plantDisplayName").textContent = localStorage.getItem("planteNom") || "Ma Plante";
     document.getElementById("plantNickname").textContent = surnom || "LabVert";
 
     function switchChart(type, btn) {

@@ -1,9 +1,7 @@
 // LabVert Dashboard
 
-// Auto-detect API URL (localhost ou réseau)
-const API_URL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
-  ? "http://127.0.0.1:3000"
-  : "http://172.20.10.3:3000";
+// API URL - Utilise l'API déployée sur le cloud
+const API_URL = "https://projet-labvert.onrender.com";
 
 const nomPlante = localStorage.getItem("planteNom");
 document.getElementById("plantTitle").textContent = nomPlante || "LabVert";

@@ -1,20 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connexion MongoDB
-const uri = process.env.MONGODB_URI;
-if (!uri) {
-  console.error("ERREUR: MONGODB_URI non trouvé dans .env");
-  process.exit(1);
-}
+// Connexion MongoDB avec les identifiants directs
+const uri = "mongodb://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@ac-xh8jbhi-shard-00-00.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-01.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-02.fyg0v3g.mongodb.net:27017/?ssl=true&replicaSet=atlas-j6agm8-shard-0&authSource=admin&retryWrites=true&w=majority&appName=LabVert-cloud";
 
 const client = new MongoClient(uri);
 await client.connect();
