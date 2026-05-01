@@ -587,38 +587,8 @@
 </head>
 <body>
 
-  <!-- Welcome Screen -->
-  <div id="welcome-screen" class="fullscreen-screen welcome-screen" style="background: linear-gradient(135deg, rgba(45,106,79,0.9), rgba(82,183,136,0.9)), url('https://images.unsplash.com/photo-1518531933037-91b2f8d47b8d?w=1200') center/cover;">
-    <div class="welcome-content">
-      <h1>Bienvenue sur LabVert</h1>
-      <p>Votre compagnon intelligent pour cultiver vos plantes</p>
-      <p style="font-size: 0.9rem; margin-top: 16px; opacity: 0.9;">Suivez la température, l'humidité et prenez soin de vos plantes en temps réel</p>
-      <button class="welcome-btn" onclick="showSetupScreen()">Commencer</button>
-    </div>
-  </div>
-
-  <!-- Setup Screen -->
-  <div id="setup-screen" class="fullscreen-screen setup-screen" style="display: none; background: linear-gradient(135deg, rgba(45,106,79,0.95), rgba(82,183,136,0.95)), url('https://images.unsplash.com/photo-1518531933037-91b2f8d47b8d?w=1200') center/cover;">
-    <div class="setup-content">
-      <h1>Configurer votre plante</h1>
-      <div class="setup-form">
-        <div class="form-group">
-          <label>Type de plante</label>
-          <select id="plant-select" class="form-select">
-            <option value="">Choisir une plante...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Surnom de votre plante</label>
-          <input type="text" id="plant-nickname" class="form-input" placeholder="Ex: Ma Monstera">
-        </div>
-        <button class="setup-btn" onclick="saveSetup()">Démarrer le Dashboard</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Wrapper du dashboard principal -->
-  <div id="main-dashboard" style="display: none; display: grid; grid-template-columns: 72px 1fr; grid-template-rows: 1fr; width: 100%; height: 100vh;">
+  <!-- Dashboard principal -->
+  <div id="main-dashboard" style="display: grid; grid-template-columns: 72px 1fr; grid-template-rows: 1fr; width: 100%; height: 100vh;">
     <div class="sidebar">
       <div class="sidebar-logo">L</div>
       <nav class="sidebar-nav">
