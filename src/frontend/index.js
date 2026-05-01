@@ -117,25 +117,37 @@ function chargerStats() {
       document.getElementById('statHumMin').textContent = data.humidite.minimum + '%';
       document.getElementById('statHumMax').textContent = data.humidite.maximum + '%';
 
-      const dernierTemp = data.temperature.historique[data.temperature.historique.length - 1];
-      const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
-      evaluerEtat(dernierTemp, dernierHum);
+      const tempLocale = data.temperature.historique[data.temperature.historique.length - 1];
+      const humLocale = data.humidite.historique[data.humidite.historique.length - 1];
+      evaluerEtat(tempLocale, humLocale);
     })
     .catch(() => console.log("Erreur stats"));
 }
 
 // Dernières valeurs
+let conseillsChargés = false;
+let dernierTemp = null;
+let dernierHum = null;
+
 function mettreAJour() {
   fetch(`${API_URL}/latest/`)
     .then(r => r.json())
     .then(data => {
       if (data.erreur) { setStatut(false); return; }
       setStatut(true);
+      dernierTemp = data.temperature;
+      dernierHum = data.humidity;
+
       document.getElementById('tempVal').innerHTML = parseFloat(data.temperature) + '<span class="sensor-unit">°C</span>';
       document.getElementById('humVal').innerHTML = parseFloat(data.humidity) + '<span class="sensor-unit">%</span>';
 
+      evaluerEtat(data.temperature, data.humidity);
+
       const plante = localStorage.getItem("planteNom");
-      if (plante) chargerConseils(plante, data.temperature, data.humidity);
+      if (plante && !conseillsChargés) {
+        conseillsChargés = true;
+        chargerConseils(plante, data.temperature, data.humidity);
+      }
     })
     .catch(() => {
       setStatut(false);
@@ -148,3 +160,49 @@ chargerStats();
 mettreAJour();
 setInterval(mettreAJour, 5000);
 setInterval(chargerStats, 30000);
+
+// Chat IA
+
+function envoyerMessage() {
+  const input = document.getElementById('chatInput');
+  const messages = document.getElementById('chatMessages');
+  const message = input.value.trim();
+  if (!message) return;
+
+  const msgUser = document.createElement('div');
+  msgUser.className = 'chat-msg user';
+  msgUser.textContent = message;
+  messages.appendChild(msgUser);
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+
+  const loading = document.createElement('div');
+  loading.className = 'chat-msg bot';
+  loading.textContent = '...';
+  messages.appendChild(loading);
+  messages.scrollTop = messages.scrollHeight;
+
+  fetch(`${API_URL}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      plante: localStorage.getItem("planteNom"),
+      temperature: dernierTemp,
+      humidity: dernierHum
+    })
+  })
+    .then(r => r.json())
+    .then(data => {
+      loading.textContent = data.reponse || "Erreur de réponse";
+      messages.scrollTop = messages.scrollHeight;
+    })
+    .catch(() => {
+      loading.textContent = "Erreur de connexion";
+    });
+}
+
+document.getElementById('chatSend').addEventListener('click', envoyerMessage);
+document.getElementById('chatInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') envoyerMessage();
+});
