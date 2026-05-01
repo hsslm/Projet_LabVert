@@ -2,9 +2,20 @@ import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
 import Groq from "groq-sdk";
+import dotenv from "dotenv";
+
+// Charger les variables d'environnement depuis le fichier .env
+dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Configuration CORS - Restreint aux origines autorisées
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || "*",
+  methods: ["GET", "POST"],
+  credentials: false
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connexion MongoDB
@@ -25,7 +36,7 @@ async function connectMongoDB() {
 }
 
 // Démarrage du serveur après connexion MongoDB
-const PORT = process.env.API_PORT || 3000;
+const PORT = process.env.PORT || process.env.API_PORT || 3000;
 
 connectMongoDB().then(success => {
   if (success) {
@@ -33,7 +44,7 @@ connectMongoDB().then(success => {
       console.log(`API LabVert en marche sur le port ${PORT}`);
     });
   } else {
-    console.error("Impossible de démarrer le serveur sans MongoDB");
+    console.error("Erreur : Impossible de démarrer le serveur sans MongoDB");
     process.exit(1);
   }
 });

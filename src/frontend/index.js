@@ -78,7 +78,7 @@ function chargerStats() {
 
       const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
       const dernierTemp = data.temperature.historique[data.temperature.historique.length - 1];
-      if (typeof evaluerEtat === 'function') evaluerEtat(dernierHum, dernierTemp);
+      if (typeof evaluerEtat === 'function') evaluerEtat(dernierTemp, dernierHum);
     });
 }
 
@@ -103,7 +103,7 @@ function mettreAJour() {
     });
 }
 
-// Charge les conseils IA via Claude
+// Charge les conseils IA via Groq API
 function chargerConseils(plante, temperature, humidity) {
   const conseilsPanel = document.getElementById('conseilsTexte');
   if (!conseilsPanel) return;
@@ -133,6 +133,36 @@ function toggleMode(el) {
 // Chargement initial
 chargerStats();
 mettreAJour();
+
+// Évalue l'état de la plante basé sur température et humidité
+function evaluerEtat(humidity, temperature) {
+  const etatElement = document.getElementById('etatPlante');
+  if (!etatElement) return;
+
+  let etat = '✅ Bonne santé';
+  let couleur = '#52b788'; // Vert
+
+  // Vérifier l'humidité
+  if (humidity < 30) {
+    etat = '🏜️ Trop sec - Arroser !';
+    couleur = '#d32f2f'; // Rouge
+  } else if (humidity > 80) {
+    etat = '💧 Trop humide';
+    couleur = '#1976d2'; // Bleu
+  }
+
+  // Vérifier la température
+  if (temperature < 5) {
+    etat = '🥶 Trop froid';
+    couleur = '#1976d2';
+  } else if (temperature > 35) {
+    etat = '🔥 Trop chaud';
+    couleur = '#f57c00';
+  }
+
+  etatElement.textContent = etat;
+  etatElement.style.color = couleur;
+}
 
 // Mise à jour continue
 setInterval(mettreAJour, 5000);      // Chaque 5s
