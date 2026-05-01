@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -343,6 +344,15 @@
       margin-top: 4px;
     }
 
+    .conseils-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 20px;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--green-deep);
+    }
+
     .center-panel > * { animation: fadeUp 0.4s ease both; }
     .center-panel > *:nth-child(1) { animation-delay: 0.05s; }
     .center-panel > *:nth-child(2) { animation-delay: 0.1s; }
@@ -397,7 +407,7 @@
           <div class="plant-name" id="plantDisplayName">Ma Plante</div>
           <div class="plant-subtitle" id="plantNickname">LabVert</div>
         </div>
-        <div class="status-badge" id="statusBadge">
+        <div class="status-badge">
           <div class="status-dot" id="statusDot"></div>
           <span id="statusText">En ligne</span>
         </div>
@@ -418,8 +428,8 @@
         <div class="chart-header">
           <span class="chart-title">Historique</span>
           <div class="chart-tabs">
-            <button class="chart-tab active" id="tabTemp">Température</button>
-            <button class="chart-tab" id="tabHum">Humidité</button>
+            <button class="chart-tab active" id="tabTemp" onclick="switchChart('temp', this)">Température</button>
+            <button class="chart-tab" id="tabHum" onclick="switchChart('hum', this)">Humidité</button>
           </div>
         </div>
         <canvas id="chartTemp" height="80"></canvas>
@@ -487,7 +497,7 @@
 
       <div>
         <div class="panel-section-title">💡 Conseils IA</div>
-        <div class="details-card" id="conseilsPanel" style="font-size: 0.8rem; line-height: 1.5; background: #f0f7f1;">
+        <div class="conseils-card">
           <div id="conseilsTexte">Chargement des conseils...</div>
         </div>
       </div>
@@ -538,14 +548,6 @@
   </div>
 
   <script>
-    // Fonction toggle pour mode automatique
-    function toggleMode(el) {
-      const pompe = document.getElementById('togglePompe');
-      pompe.disabled = el.checked;
-      pompe.parentElement.style.opacity = el.checked ? '0.4' : '1';
-    }
-
-    // Fonction pour changer les graphiques
     function switchChart(type, btn) {
       document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
@@ -553,19 +555,24 @@
       document.getElementById('chartHum').style.display = type === 'hum' ? 'block' : 'none';
     }
 
-    // Gestion des boutons du sidebar
-    document.querySelectorAll('.nav-icon').forEach((icon, index) => {
+    document.querySelectorAll('.nav-icon').forEach((icon) => {
       icon.addEventListener('click', function() {
         document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
         this.classList.add('active');
       });
     });
 
-    // Ajouter event listener au toggle automatique
     document.getElementById('toggleAuto').addEventListener('change', function() {
-      toggleMode(this);
+      const pompe = document.getElementById('togglePompe');
+      pompe.disabled = this.checked;
+      pompe.parentElement.style.opacity = this.checked ? '0.4' : '1';
+    });
+
+    document.getElementById('togglePompe').addEventListener('click', function(e) {
+      if (document.getElementById('toggleAuto').checked) e.preventDefault();
     });
   </script>
+
   <script src="index.js"></script>
 
 </body>

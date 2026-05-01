@@ -3,12 +3,22 @@
 // API URL - Utilise l'API déployée sur le cloud
 const API_URL = "https://projet-labvert.onrender.com";
 
+// Plante
 const nomPlante = localStorage.getItem("planteNom");
 const typePlante = localStorage.getItem("planteType");
 document.getElementById("plantTitle").textContent = nomPlante || "LabVert";
 document.getElementById("plantDisplayName").textContent = nomPlante || "Ma Plante";
 document.getElementById("plantNickname").textContent = typePlante || "LabVert";
 
+// Statut connexion
+function setStatut(enLigne) {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  if (dot) dot.style.background = enLigne ? '#52b788' : '#e57373';
+  if (text) text.textContent = enLigne ? 'En ligne' : 'Hors ligne';
+}
+
+// Graphiques
 const ctxTemp = document.getElementById('chartTemp').getContext('2d');
 const ctxHum  = document.getElementById('chartHum').getContext('2d');
 
@@ -33,7 +43,6 @@ const chartTemp = new Chart(ctxTemp, {
   }
 });
 
-// Graphique de l'humidité
 const chartHum = new Chart(ctxHum, {
   type: 'line',
   data: {
@@ -55,7 +64,39 @@ const chartHum = new Chart(ctxHum, {
   }
 });
 
-// Charge les stats et met à jour les graphiques
+// Évaluer état plante
+function evaluerEtat(temperature, humidity) {
+  const sol = document.getElementById('solEtat');
+  const humNiv = document.getElementById('humNiveau');
+  const tempStat = document.getElementById('tempStatut');
+
+  if (sol) sol.textContent = humidity < 30 ? 'Sec' : humidity < 60 ? 'Humide' : 'Très humide';
+  if (humNiv) humNiv.textContent = humidity < 30 ? 'Faible' : humidity < 60 ? 'Normal' : 'Élevé';
+  if (tempStat) tempStat.textContent = temperature < 15 ? 'Froid' : temperature < 28 ? 'Optimal' : 'Chaud';
+}
+
+// Conseils IA
+function chargerConseils(plante, temperature, humidity) {
+  const conseilsPanel = document.getElementById('conseilsTexte');
+  if (!conseilsPanel) return;
+
+  conseilsPanel.textContent = "Chargement des conseils...";
+
+  fetch(`${API_URL}/conseils?plante=${encodeURIComponent(plante)}&temperature=${temperature}&humidity=${humidity}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.erreur) {
+        conseilsPanel.textContent = "Impossible de charger les conseils.";
+        return;
+      }
+      conseilsPanel.textContent = data.conseils;
+    })
+    .catch(() => {
+      conseilsPanel.textContent = "Conseils non disponibles";
+    });
+}
+
+// Stats
 function chargerStats() {
   fetch(`${API_URL}/stats/`)
     .then(r => r.json())
@@ -76,94 +117,34 @@ function chargerStats() {
       document.getElementById('statHumMin').textContent = data.humidite.minimum + '%';
       document.getElementById('statHumMax').textContent = data.humidite.maximum + '%';
 
-      const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
       const dernierTemp = data.temperature.historique[data.temperature.historique.length - 1];
-      if (typeof evaluerEtat === 'function') evaluerEtat(dernierTemp, dernierHum);
-    });
+      const dernierHum = data.humidite.historique[data.humidite.historique.length - 1];
+      evaluerEtat(dernierTemp, dernierHum);
+    })
+    .catch(() => console.log("Erreur stats"));
 }
 
-// Récupère et affiche les dernières valeurs
+// Dernières valeurs
 function mettreAJour() {
   fetch(`${API_URL}/latest/`)
     .then(r => r.json())
     .then(data => {
-      if (data.erreur) return;
+      if (data.erreur) { setStatut(false); return; }
+      setStatut(true);
       document.getElementById('tempVal').innerHTML = parseFloat(data.temperature) + '<span class="sensor-unit">°C</span>';
       document.getElementById('humVal').innerHTML = parseFloat(data.humidity) + '<span class="sensor-unit">%</span>';
 
-      // Charger les conseils IA
       const plante = localStorage.getItem("planteNom");
-      if (plante) {
-        chargerConseils(plante, data.temperature, data.humidity);
-      }
+      if (plante) chargerConseils(plante, data.temperature, data.humidity);
     })
     .catch(() => {
+      setStatut(false);
       document.getElementById('tempVal').innerHTML = '--<span class="sensor-unit">°C</span>';
       document.getElementById('humVal').innerHTML = '--<span class="sensor-unit">%</span>';
     });
 }
 
-// Charge les conseils IA via Groq API
-function chargerConseils(plante, temperature, humidity) {
-  const conseilsPanel = document.getElementById('conseilsTexte');
-  if (!conseilsPanel) return;
-
-  fetch(`${API_URL}/conseils?plante=${encodeURIComponent(plante)}&temperature=${temperature}&humidity=${humidity}`)
-    .then(r => r.json())
-    .then(data => {
-      if (data.erreur) {
-        conseilsPanel.textContent = "Impossible de charger les conseils.";
-        return;
-      }
-      conseilsPanel.textContent = data.conseils;
-    })
-    .catch(err => {
-      console.error("Erreur conseils:", err);
-      conseilsPanel.textContent = "Conseils non disponibles";
-    });
-}
-
-// Désactiver mode manuel si mode auto activé
-function toggleMode(el) {
-  const pompe = document.getElementById('togglePompe');
-  pompe.disabled = el.checked;
-  pompe.parentElement.style.opacity = el.checked ? '0.4' : '1';
-}
-
-// Chargement initial
 chargerStats();
 mettreAJour();
-
-// Évalue l'état de la plante basé sur température et humidité
-function evaluerEtat(humidity, temperature) {
-  const etatElement = document.getElementById('etatPlante');
-  if (!etatElement) return;
-
-  let etat = '✅ Bonne santé';
-  let couleur = '#52b788'; // Vert
-
-  // Vérifier l'humidité
-  if (humidity < 30) {
-    etat = '🏜️ Trop sec - Arroser !';
-    couleur = '#d32f2f'; // Rouge
-  } else if (humidity > 80) {
-    etat = '💧 Trop humide';
-    couleur = '#1976d2'; // Bleu
-  }
-
-  // Vérifier la température
-  if (temperature < 5) {
-    etat = '🥶 Trop froid';
-    couleur = '#1976d2';
-  } else if (temperature > 35) {
-    etat = '🔥 Trop chaud';
-    couleur = '#f57c00';
-  }
-
-  etatElement.textContent = etat;
-  etatElement.style.color = couleur;
-}
-
-// Mise à jour continue
-setInterval(mettreAJour, 5000);      // Chaque 5s
-setInterval(chargerStats, 30000);    // Chaque 30s
+setInterval(mettreAJour, 5000);
+setInterval(chargerStats, 30000);
