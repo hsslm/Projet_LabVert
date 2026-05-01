@@ -6,12 +6,36 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connexion MongoDB avec les identifiants directs
-const uri = "mongodb://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@ac-xh8jbhi-shard-00-00.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-01.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-02.fyg0v3g.mongodb.net:27017/?ssl=true&replicaSet=atlas-j6agm8-shard-0&authSource=admin&retryWrites=true&w=majority&appName=LabVert-cloud";
+// Connexion MongoDB
+const uri = process.env.MONGODB_URI || "mongodb+srv://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@labvert-cloud.fyg0v3g.mongodb.net/LabVert?retryWrites=true&w=majority&appName=LabVert-cloud";
 
-const client = new MongoClient(uri);
-await client.connect();
-console.log("Connecté à MongoDB !");
+let client;
+
+async function connectMongoDB() {
+  try {
+    client = new MongoClient(uri);
+    await client.connect();
+    console.log("Connecté à MongoDB !");
+    return true;
+  } catch (err) {
+    console.error("Erreur de connexion MongoDB:", err.message);
+    return false;
+  }
+}
+
+// Démarrage du serveur après connexion MongoDB
+const PORT = process.env.API_PORT || 3000;
+
+connectMongoDB().then(success => {
+  if (success) {
+    app.listen(PORT, () => {
+      console.log(`API LabVert en marche sur le port ${PORT}`);
+    });
+  } else {
+    console.error("Impossible de démarrer le serveur sans MongoDB");
+    process.exit(1);
+  }
+});
 
 // Reçoit les données du capteur ESP32 et les sauvegarde en DB
 app.post("/data", async (req, res) => {
@@ -63,6 +87,3 @@ app.get("/plantes", (req, res) => {
   ]);
 });
 
-app.listen(3000, () => {
-  console.log("API LabVert en marche sur le port 3000");
-});
