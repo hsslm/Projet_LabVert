@@ -4,7 +4,10 @@
 const API_URL = "https://projet-labvert.onrender.com";
 
 const nomPlante = localStorage.getItem("planteNom");
+const typePlante = localStorage.getItem("planteType");
 document.getElementById("plantTitle").textContent = nomPlante || "LabVert";
+document.getElementById("plantDisplayName").textContent = nomPlante || "Ma Plante";
+document.getElementById("plantNickname").textContent = typePlante || "LabVert";
 
 const ctxTemp = document.getElementById('chartTemp').getContext('2d');
 const ctxHum  = document.getElementById('chartHum').getContext('2d');
