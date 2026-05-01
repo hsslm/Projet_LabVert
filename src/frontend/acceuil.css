@@ -164,3 +164,30 @@ canvas {
 .modal-close:hover {
   background: #1b5e20;
 }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block;
+  background: rgba(46, 125, 50, 0.2);
+  color: #2e7d32;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* ── SLOGAN & DESCRIPTION ── */
+.slogan {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #1b5e20;
+  margin-bottom: 15px;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: #3a5a3a;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
