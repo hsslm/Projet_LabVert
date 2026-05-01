@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion MongoDB
-const uri = process.env.MONGODB_URI || "mongodb+srv://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@labvert-cloud.fyg0v3g.mongodb.net/LabVert?retryWrites=true&w=majority&appName=LabVert-cloud";
+const uri = process.env.MONGODB_URI || "mongodb://hajjamiselma_db_user:hPqC7Kks6lIMhoRL@ac-xh8jbhi-shard-00-00.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-01.fyg0v3g.mongodb.net:27017,ac-xh8jbhi-shard-00-02.fyg0v3g.mongodb.net:27017/?ssl=true&replicaSet=atlas-j6agm8-shard-0&authSource=admin&retryWrites=true&w=majority&appName=LabVert-cloud";
 
 let client;
 
