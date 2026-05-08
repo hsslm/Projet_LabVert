@@ -3,6 +3,9 @@
 // API URL - Utilise l'API déployée sur le cloud
 const API_URL = "https://projet-labvert.onrender.com";
 
+// IP de l'ESP32 sur le réseau local - mettre l'IP affichée dans le Serial Monitor
+const ESP32_URL = "http://172.20.10.2"; 
+
 // Récupère le nom et sauvegarde 
 const nomPlante = localStorage.getItem("planteNom");
 const typePlante = localStorage.getItem("planteType");
@@ -232,4 +235,43 @@ document.getElementById('chatSend').addEventListener('click', envoyerMessage);
 // Touche Entrée → envoie msg
 document.getElementById('chatInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') envoyerMessage();
+});
+
+// ── CONTRÔLE DE LA POMPE ──
+
+// Envoie une commande à l'ESP32 pour allumer/éteindre la pompe ou changer de mode
+function envoyerCommandePompe(pompe, auto_mode) {
+  fetch(`${ESP32_URL}/pompe`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pompe: pompe, auto: auto_mode })
+  }).catch(() => console.log("Erreur commande pompe"));
+}
+
+// écoute si l'utilisateur change le toggle auto
+document.getElementById('toggleAuto').addEventListener('change', function() {
+  
+  //  prend le toggle manuel
+  const pompe = document.getElementById('togglePompe');
+  
+  // Si auto est activé = bloque le manuel
+  pompe.disabled = this.checked;
+  
+  // On grise le manuel pour montrer qu'il est bloqué
+  if (this.checked) {
+    pompe.parentElement.style.opacity = '0.4'; // grisé
+    pompe.checked = false; // désactive le toggle manuel
+    envoyerCommandePompe(false, true); // active mode auto sur l'ESP32
+  } else {
+    pompe.parentElement.style.opacity = '1'; // normal
+    envoyerCommandePompe(false, false); // désactive mode auto sur l'ESP32
+  }
+});
+
+// Si l'utilisateur essaie de cliquer sur manuel quand auto est activé
+// on annule le clic
+document.getElementById('togglePompe').addEventListener('change', function() {
+  if (document.getElementById('toggleAuto').checked) return; // bloqué si auto actif
+  // Envoie la commande à l'ESP32 selon l'état du toggle
+  envoyerCommandePompe(this.checked, false);
 });

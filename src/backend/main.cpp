@@ -4,20 +4,53 @@
 #include <WiFi.h>
 #include <DHT.h>
 #include <HTTPClient.h>
+#include <WebServer.h>
 
 // Charger la configuration depuis config.h
-
 #include "config.h"
 
 // Utiliser les variables de config.h
 const char* ssid = WIFI_SSID;
 const char* motDePasse = WIFI_PASSWORD;
 const char* apiUrl = API_URL;
+
 DHT dht(DHTPIN, DHTTYPE);
+
+// Serveur HTTP local sur l'ESP32 pour recevoir les commandes du frontend
+WebServer server(80);
+
+// Pins du L298N pour contrôler la pompe
+#define ENA 26
+#define IN1 27
+#define IN2 14
+
+// États de la pompe
+bool modeAuto = false;
+bool pompeActive = false;
+
+// Allume la pompe
+void allumerPompe() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(ENA, HIGH);
+  pompeActive = true;
+}
+
+// Éteint la pompe
+void eteindrePompe() {
+  digitalWrite(ENA, LOW);
+  pompeActive = false;
+}
 
 void setup() {
   Serial.begin(115200);
   dht.begin();
+
+  // Initialise les pins de la pompe
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  eteindrePompe(); // pompe éteinte au démarrage
 
   Serial.println("Connexion WiFi...");
   WiFi.begin(ssid, motDePasse);
@@ -28,14 +61,39 @@ void setup() {
 
   Serial.println("\nWiFi connecté");
   Serial.print("IP: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.localIP()); // affiche l'IP à mettre dans index.js
+
+  // Route POST /pompe : reçoit les commandes du frontend pour contrôler la pompe
+  server.on("/pompe", HTTP_POST, []() {
+    if (server.hasArg("plain")) {
+      String body = server.arg("plain");
+      // Allume ou éteint la pompe selon la commande reçue
+      if (body.indexOf("\"pompe\":true") >= 0) allumerPompe();
+      else eteindrePompe();
+      // Active ou désactive le mode automatique
+      if (body.indexOf("\"auto\":true") >= 0) modeAuto = true;
+      else modeAuto = false;
+    }
+    server.send(200, "application/json", "{\"ok\":true}");
+  });
+
+  server.begin();
 }
 
 void loop() {
+  // Écoute les requêtes HTTP entrantes du frontend
+  server.handleClient();
+
   float h = dht.readHumidity();
   float t = dht.readTemperature();
 
   if (!isnan(h) && !isnan(t)) {
+    // Mode automatique : arrose si humidité du sol sous 30%
+    if (modeAuto) {
+      if (h < 30) allumerPompe();
+      else eteindrePompe();
+    }
+
     // Envoyer au serveur API
     HTTPClient http;
     http.begin(apiUrl);
@@ -50,4 +108,3 @@ void loop() {
   // Attendre 60 secondes avant la prochaine mesure
   delay(60000);
 }
-  
