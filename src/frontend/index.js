@@ -3,24 +3,6 @@
 // API URL - Utilise l'API déployée sur le cloud
 const API_URL = "https://projet-labvert.onrender.com";
 
-// IP de l'ESP32 sur le réseau local - mettre l'IP affichée dans le Serial Monitor
-const ESP32_URL = "http://172.20.10.2";
-
-// Relaie la commande de la pompe vers l'ESP32
-app.post('/pompe', async (req, res) => {
-  try {
-    const response = await fetch(`${ESP32_URL}/pompe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body)
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ erreur: "ESP32 inaccessible" });
-  }
-});
-
 // Récupère le nom et sauvegarde 
 const nomPlante = localStorage.getItem("planteNom");
 const typePlante = localStorage.getItem("planteType");
@@ -254,7 +236,7 @@ document.getElementById('chatInput').addEventListener('keypress', function(e) {
 
 // ── CONTRÔLE DE LA POMPE ──
 
-// Envoie la commande au backend qui relaie à l'ESP32
+// Envoie la commande au backend Render qui relaie vers l'ESP32
 function envoyerCommandePompe(pompe, auto_mode) {
   fetch(`${API_URL}/pompe`, {
     method: 'POST',

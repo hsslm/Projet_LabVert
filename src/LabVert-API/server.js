@@ -178,3 +178,20 @@ Réponds en français, sois concis et pratique. Utilise des emojis.`
   }
 });
 
+// Relaie la commande de la pompe vers l'ESP32 sur le réseau local
+app.post("/pompe", async (req, res) => {
+  try {
+    const ESP32_URL = process.env.ESP32_URL || "http://172.20.10.2";
+    const response = await fetch(`${ESP32_URL}/pompe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error("Erreur ESP32:", err.message);
+    res.status(500).json({ erreur: "ESP32 inaccessible" });
+  }
+});
+
