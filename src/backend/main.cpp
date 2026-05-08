@@ -63,8 +63,17 @@ void setup() {
   Serial.print("IP: ");
   Serial.println(WiFi.localIP()); // affiche l'IP à mettre dans index.js
 
+  // Gère la requête préliminaire CORS envoyée par le navigateur avant chaque POST
+  server.on("/pompe", HTTP_OPTIONS, []() {
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.sendHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
+    server.send(204);
+  });
+
   // Route POST /pompe : reçoit les commandes du frontend pour contrôler la pompe
   server.on("/pompe", HTTP_POST, []() {
+    server.sendHeader("Access-Control-Allow-Origin", "*"); // autorise le navigateur à lire la réponse
     if (server.hasArg("plain")) {
       String body = server.arg("plain");
       // Allume ou éteint la pompe selon la commande reçue
