@@ -28,18 +28,23 @@ WebServer server(80);
 bool modeAuto = false;
 bool pompeActive = false;
 
+// Timestamp de la dernière mesure envoyée
+unsigned long dernierEnvoi = 0;
+
 // Allume la pompe
 void allumerPompe() {
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(ENA, HIGH);
   pompeActive = true;
+  Serial.println("Pompe allumée");
 }
 
 // Éteint la pompe
 void eteindrePompe() {
   digitalWrite(ENA, LOW);
   pompeActive = false;
+  Serial.println("Pompe éteinte");
 }
 
 void setup() {
@@ -76,6 +81,7 @@ void setup() {
     server.sendHeader("Access-Control-Allow-Origin", "*"); // autorise le navigateur à lire la réponse
     if (server.hasArg("plain")) {
       String body = server.arg("plain");
+      Serial.println("Commande reçue: " + body);
       // Allume ou éteint la pompe selon la commande reçue
       if (body.indexOf("\"pompe\":true") >= 0) allumerPompe();
       else eteindrePompe();
@@ -90,30 +96,33 @@ void setup() {
 }
 
 void loop() {
-  // Écoute les requêtes HTTP entrantes du frontend
+  // Écoute les requêtes HTTP entrantes du frontend - doit tourner en continu sans blocage
   server.handleClient();
 
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
+  // Envoie les données toutes les 60 secondes sans bloquer le serveur
+  unsigned long maintenant = millis();
+  if (maintenant - dernierEnvoi >= 60000) {
+    dernierEnvoi = maintenant;
 
-  if (!isnan(h) && !isnan(t)) {
-    // Mode automatique : arrose si humidité du sol sous 30%
-    if (modeAuto) {
-      if (h < 30) allumerPompe();
-      else eteindrePompe();
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+
+    if (!isnan(h) && !isnan(t)) {
+      // Mode automatique : arrose si humidité du sol sous 30%
+      if (modeAuto) {
+        if (h < 30) allumerPompe();
+        else eteindrePompe();
+      }
+
+      // Envoyer au serveur API
+      HTTPClient http;
+      http.begin(apiUrl);
+      http.addHeader("Content-Type", "application/json");
+      http.setTimeout(5000);
+
+      String json = "{\"temperature\": " + String(t) + ", \"humidity\": " + String(h) + "}";
+      http.POST(json);
+      http.end();
     }
-
-    // Envoyer au serveur API
-    HTTPClient http;
-    http.begin(apiUrl);
-    http.addHeader("Content-Type", "application/json");
-    http.setTimeout(5000);
-
-    String json = "{\"temperature\": " + String(t) + ", \"humidity\": " + String(h) + "}";
-    http.POST(json);
-    http.end();
   }
-
-  // Attendre 60 secondes avant la prochaine mesure
-  delay(60000);
 }
