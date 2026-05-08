@@ -1,4 +1,6 @@
-/* ── RESET ── */
+/* ── RESET fais ── */
+/* Remet à zéro les marges et espacements par défaut du navigateur */
+/* box-sizing: border-box = la taille inclut le padding et la bordure */
 * {
   margin: 0;
   padding: 0;
@@ -7,8 +9,8 @@
  
 body {
   font-family: 'DM Sans', Arial, Helvetica, sans-serif;
-  background-image: url('bg.jpg'); /* ou une couleur si tu veux */
-  background-size: cover;
+  background-image: url('bg.jpg'); /* image de fond */
+  background-size: cover;/* Couvre tout l'écran*/
   background-position: center;
   min-height: 100vh;
   display: flex;
@@ -17,24 +19,25 @@ body {
   color: #1b5e20;
 }
  
-/* ── HEADER / TITRE ── */
+/* ──  TITRE ── */
 header, .card h1, .card h2 {
   text-align: center;
   font-family: 'Playfair Display', serif;
 }
- 
+ /* Taille du titre principal */
 header h1, .card h1 {
   font-size: 3rem;
   margin-bottom: 10px;
 }
- 
+ /* Sous-titre en vert plus clair */
+
 .subtitle {
   font-size: 1.2rem;
   color: #388e3c;
   margin-bottom: 20px;
 }
  
-/* ── CARDS ── */
+/* ── Conteneur des cartes ── */
 .cards, .container {
   display: flex;
   justify-content: center;
@@ -42,7 +45,7 @@ header h1, .card h1 {
   flex-wrap: wrap;
   margin-top: 30px;
 }
- 
+ /*Style avec l'aide d'IA*/
 .card {
   background: rgba(255,255,255,0.2); /* flou style frosted glass */
   backdrop-filter: blur(12px);
@@ -102,7 +105,7 @@ header h1, .card h1 {
   transform: translateY(-2px);
 }
  
-/* ── CANVAS / GRAPHIQUE ── */
+/* ──  GRAPHIQUE ── */
 canvas {
   margin-top: 30px;
   border-radius: 16px;
@@ -111,7 +114,7 @@ canvas {
   padding: 20px;
 }
  
-/* ── MODAL / POPUP ── */
+/* ──  POPUP ── */
 .modal-overlay {
   position: fixed;
   top: 0;

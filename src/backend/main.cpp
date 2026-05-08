@@ -6,7 +6,7 @@
 #include <HTTPClient.h>
 
 // Charger la configuration depuis config.h
-// IMPORTANT : Copiez config.h.example en config.h et éditez avec vos identifiants WiFi
+
 #include "config.h"
 
 // Utiliser les variables de config.h

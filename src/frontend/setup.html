@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!--fait-->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LabVert</title>
-  <link rel="stylesheet" href="page1.css">
+  <link rel="stylesheet" href="setup.css">
 </head>
 
 <body>
@@ -15,12 +15,12 @@
   <form id="plantForm">
 
     <label for="plantInput">Votre plante :</label>
-
+<!--Case pr le nom de la plante-->
     <div class="input-wrapper">
-      <input type="text" id="plantInput" placeholder="Ex : Monstera, Lavande..." autocomplete="off" required>
+      <input type="text" id="plantInput" placeholder="Ex : Monstera, Lavande..." autocomplete="off" required><!--désactive les suggestions du navigateur-->
       <div id="suggestions"></div>
     </div>
-
+<!--Case pr le surnom-->
     <label for="plantType">Surnom de la plante :</label>
     <input type="text" id="plantType" placeholder="Ex : Fleur, Bébé plante..." required>
 
@@ -29,15 +29,15 @@
 </div>
 
 <script>
-// API URL - utilise l'API déployée sur Render
+// API URL - utilise l'API déployée sur Render 
 const API_URL = "https://projet-labvert.onrender.com";
 
-let plantes = [];
+let plantes = [];//Liste des plantes
 const plantInput = document.getElementById("plantInput");
 const suggestionsBox = document.getElementById("suggestions");
 
-// Charger les plantes
-async function chargerPlantes() {
+// Fonction pour charger les plantes
+async function chargerPlantes() {// async= en attente de la réponse
   try {
     const response = await fetch(`${API_URL}/plantes`);
     plantes = await response.json();
@@ -48,7 +48,7 @@ async function chargerPlantes() {
 chargerPlantes();
 
 // Suggestions dynamiques
-plantInput.addEventListener("input", () => {
+plantInput.addEventListener("input", () => { // Écoute chaque fois que l'utilisateur tape une lettre dans le champ
   const query = plantInput.value.toLowerCase();
   suggestionsBox.innerHTML = "";
 
@@ -57,7 +57,7 @@ plantInput.addEventListener("input", () => {
     return;
   }
 
-  const filtres = plantes.filter(p => p.toLowerCase().includes(query));
+  const filtres = plantes.filter(p => p.toLowerCase().includes(query));// filtre la liste de plantes
 
   if (filtres.length === 0) {
     suggestionsBox.style.display = "none";
@@ -65,12 +65,14 @@ plantInput.addEventListener("input", () => {
   }
 
   filtres.forEach(p => {
+    // Crée une boîte HTML pour chaque plante trouvée
     const div = document.createElement("div");
-    div.textContent = p;
+    div.textContent = p; // Met le nom de la plante dans la boîte
     div.onclick = () => {
       plantInput.value = p;
       suggestionsBox.style.display = "none";
     };
+    // Ajoute la boîte dans la liste de suggestions
     suggestionsBox.appendChild(div);
   });
 
@@ -79,7 +81,7 @@ plantInput.addEventListener("input", () => {
 
 // Soumission
 document.getElementById("plantForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+  e.preventDefault();//Empêche le comportement par défaut d'un formulaire HTML
 
   const nom = plantInput.value.trim();
   const type = document.getElementById("plantType").value.trim();
@@ -88,7 +90,7 @@ document.getElementById("plantForm").addEventListener("submit", (e) => {
     alert("Remplis tous les champs !");
     return;
   }
-
+//Récupération des données pr le dashboard.html
   localStorage.setItem("planteNom", nom);
   localStorage.setItem("planteType", type);
 

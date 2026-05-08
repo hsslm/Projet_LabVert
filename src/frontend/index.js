@@ -3,7 +3,7 @@
 // API URL - Utilise l'API déployée sur le cloud
 const API_URL = "https://projet-labvert.onrender.com";
 
-// Plante
+// Récupère le nom et sauvegarde 
 const nomPlante = localStorage.getItem("planteNom");
 const typePlante = localStorage.getItem("planteType");
 document.getElementById("plantTitle").textContent = nomPlante || "LabVert";
@@ -14,8 +14,22 @@ document.getElementById("plantNickname").textContent = typePlante || "LabVert";
 function setStatut(enLigne) {
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
-  if (dot) dot.style.background = enLigne ? '#52b788' : '#e57373';
-  if (text) text.textContent = enLigne ? 'En ligne' : 'Hors ligne';
+  
+  if (dot) {
+    if (enLigne) {
+      dot.style.background = '#52b788';
+    } else {
+      dot.style.background = '#e57373';
+    }
+  }
+  
+  if (text) {
+    if (enLigne) {
+      text.textContent = 'En ligne';
+    } else {
+      text.textContent = 'Hors ligne';
+    }
+  }
 }
 
 // Graphiques
@@ -23,23 +37,26 @@ const ctxTemp = document.getElementById('chartTemp').getContext('2d');
 const ctxHum  = document.getElementById('chartHum').getContext('2d');
 
 const chartTemp = new Chart(ctxTemp, {
-  type: 'line',
+  type: 'line',// en courbe
   data: {
-    labels: [],
+    labels: [],//x=heures
+    //courbe dans le graphique
     datasets: [{
       label: 'Température (°C)',
       data: [],
       borderColor: '#2e7d32',
       backgroundColor: 'rgba(46,125,50,0.10)',
-      tension: 0.4,
-      fill: true,
-      pointRadius: 3
+      tension: 0.4,//rend la courbe arrondie
+      fill: true,//remplit la zone sous la courbe
+      pointRadius: 3//la taille des petits points sur la courbe
     }]
   },
   options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { title: { display: true, text: '°C' } } }
+    responsive: true,//graphique s'adapte à la taille de l'écran
+     plugins: { legend: { display: false } },
+    scales: { 
+      y: { title: { display: true, text: '°C' } } },//Titre axe de Y
+      x: { title: { display: true, text: 'Temps' } } // Titre axe X
   }
 });
 
@@ -60,11 +77,13 @@ const chartHum = new Chart(ctxHum, {
   options: {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: { y: { title: { display: true, text: '%' }, min: 0, max: 100 } }
+    scales: {
+       y: { title: { display: true, text: '%' }, min: 0, max: 100 } },
+       x: { title: { display: true, text: 'Temps' } } // Titre axe X
   }
 });
 
-// Évaluer état plante
+// fonction pr évaluer état plante
 function evaluerEtat(temperature, humidity) {
   const sol = document.getElementById('solEtat');
   const humNiv = document.getElementById('humNiveau');
@@ -75,15 +94,15 @@ function evaluerEtat(temperature, humidity) {
   if (tempStat) tempStat.textContent = temperature < 15 ? 'Froid' : temperature < 28 ? 'Optimal' : 'Chaud';
 }
 
-// Conseils IA
+// fonction pr les conseils de l'IA
 function chargerConseils(plante, temperature, humidity) {
   const conseilsPanel = document.getElementById('conseilsTexte');
   if (!conseilsPanel) return;
 
   conseilsPanel.textContent = "Chargement des conseils...";
-
+//Envoie requête au serveur
   fetch(`${API_URL}/conseils?plante=${encodeURIComponent(plante)}&temperature=${temperature}&humidity=${humidity}`)
-    .then(r => r.json())
+    .then(r => r.json())//convertit la réponse en JS
     .then(data => {
       if (data.erreur) {
         conseilsPanel.textContent = "Impossible de charger les conseils.";
@@ -96,18 +115,20 @@ function chargerConseils(plante, temperature, humidity) {
     });
 }
 
-// Stats
+// focntion pour les statistiques
 function chargerStats() {
-  fetch(`${API_URL}/stats/`)
+  fetch(`${API_URL}/stats/`)//requête pour chercher les stats
     .then(r => r.json())
     .then(data => {
       if (data.erreur) return;
-      chartTemp.data.labels = data.labels;
-      chartTemp.data.datasets[0].data = data.temperature.historique.map(Number);
-      chartTemp.update();
+      chartTemp.data.labels = data.labels;//met les heures sur l'axe X du graphique température
+      chartTemp.data.datasets[0].data = data.temperature.historique.map(Number);//met les valeurs de température dans la courbe+ map=convertit valeur en nbr
+      chartTemp.update();//redessine le graphique avec les nouvelles données
+      //pareil mais pour le graphique d'humidité
       chartHum.data.labels = data.labels;
       chartHum.data.datasets[0].data = data.humidite.historique.map(Number);
       chartHum.update();
+
       document.getElementById('statTempMoy').textContent = data.temperature.moyenne + '°C';
       document.getElementById('statTempMed').textContent = data.temperature.mediane + '°C';
       document.getElementById('statTempMin').textContent = data.temperature.minimum + '°C';
@@ -119,7 +140,7 @@ function chargerStats() {
 
       const tempLocale = data.temperature.historique[data.temperature.historique.length - 1];
       const humLocale = data.humidite.historique[data.humidite.historique.length - 1];
-      evaluerEtat(tempLocale, humLocale);
+      evaluerEtat(tempLocale, humLocale);//appelle la fonction pour mettre à jour l'état de la plante avec ces valeurs
     })
     .catch(() => console.log("Erreur stats"));
 }
@@ -130,11 +151,12 @@ let dernierTemp = null;
 let dernierHum = null;
 
 function mettreAJour() {
-  fetch(`${API_URL}/latest/`)
+  fetch(`${API_URL}/latest/`)//chercher les dernières valeurs du capteur
     .then(r => r.json())
     .then(data => {
       if (data.erreur) { setStatut(false); return; }
       setStatut(true);
+      //Sauvegarde la dernière température et humidité
       dernierTemp = data.temperature;
       dernierHum = data.humidity;
 
@@ -164,24 +186,28 @@ setInterval(chargerStats, 30000);
 // Chat IA
 
 function envoyerMessage() {
-  const input = document.getElementById('chatInput');
-  const messages = document.getElementById('chatMessages');
+  const input = document.getElementById('chatInput');//L'utilisateur tape un message
+  const messages = document.getElementById('chatMessages');//affiche son message à droite
+  // Récup msg, stop si vide
   const message = input.value.trim();
   if (!message) return;
 
+  //Crée une nouvelle boîte HTML  msg
   const msgUser = document.createElement('div');
   msgUser.className = 'chat-msg user';
-  msgUser.textContent = message;
+  msgUser.textContent = message;// met le message dans la bulle
   messages.appendChild(msgUser);
-  input.value = '';
-  messages.scrollTop = messages.scrollHeight;
+  input.value = '';//Vide le champ de texte après l'envoi
+  messages.scrollTop = messages.scrollHeight;// Scroll en bas
 
+  //Crée une nouvelle boîte HTML  ia
   const loading = document.createElement('div');
   loading.className = 'chat-msg bot';
   loading.textContent = '...';
   messages.appendChild(loading);
   messages.scrollTop = messages.scrollHeight;
 
+  // Envoi au serveur
   fetch(`${API_URL}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -201,8 +227,9 @@ function envoyerMessage() {
       loading.textContent = "Erreur de connexion";
     });
 }
-
+// Clic bouton → envoie msg
 document.getElementById('chatSend').addEventListener('click', envoyerMessage);
+// Touche Entrée → envoie msg
 document.getElementById('chatInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') envoyerMessage();
 });
