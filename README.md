@@ -428,8 +428,8 @@ En production (Render + Vercel) :
 
 ## Auteurs
 
-Selma Hajjami
-Douaa Bouhlal
+Selma Hajjami,
+Douaa Bouhlal,
 Abyan Rahima Elmi
 
 ---
@@ -870,8 +870,8 @@ In production (Render + Vercel) :
 
 ## Authors
 
-Selma Hajjami
-Douaa Bouhlal
+Selma Hajjami,
+Douaa Bouhlal,
 Abyan Rahima Elmi
 
 ---
